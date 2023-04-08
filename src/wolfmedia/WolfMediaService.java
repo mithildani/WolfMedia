@@ -1,7 +1,12 @@
 package wolfmedia;
 
+
 import java.sql.SQLException;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.sql.Date;
 import java.util.Scanner;
 
 public class WolfMediaService {
@@ -22,7 +27,8 @@ public class WolfMediaService {
             System.out.println("2. Display a song by Media ID");
             System.out.println("3. Update a Song by Media ID");
             System.out.println("4**. Delete song by MediaID");
-            System.out.println("5. Quit");
+            System.out.println("5. Enter a new song");
+            System.out.println("6. Quit");
 
             // Get user input
             int option = scanner.nextInt();
@@ -88,8 +94,60 @@ public class WolfMediaService {
 //					e.printStackTrace();
 //				}
                     break;
-                    
                 case 5:
+           
+                		
+                	    // Add a new song
+                	    System.out.print("Enter media ID: ");
+                	    int songMediaId = scanner.nextInt();
+                	    scanner.nextLine(); // consume newline character
+                	    System.out.print("Enter track number: ");
+                	    int songTrackNumber = scanner.nextInt();
+                	    scanner.nextLine(); // consume newline character
+                	    System.out.print("Enter title: ");
+                	    String songTitle = scanner.nextLine();
+                	    System.out.print("Enter country: ");
+                	    String songCountry = scanner.nextLine();
+                	    System.out.print("Enter language: ");
+                	    String songLanguage = scanner.nextLine();
+
+                	    System.out.print("Enter duration (hh:mm:ss): ");
+                	    Time duration = null;
+                	    if (scanner.hasNextLine()) {
+                	        String durationStr = scanner.nextLine();
+
+                	        try {
+                	            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                	            java.util.Date date = sdf.parse(durationStr);
+                	            duration = new Time(date.getTime());
+                	        } catch (Exception e) {
+                	            System.out.println("Invalid time format. Please try again.");
+                	            return;
+                	        }
+                	    } else {
+                	        System.out.println("No input available");
+                	        return;
+                	    }
+
+                	    System.out.print("Enter royalty rate (e.g. 12.50): ");
+                	    double songRoyaltyRate = scanner.nextDouble();
+                	    System.out.print("Enter album ID: ");
+                	    int songAlbumID = scanner.nextInt();
+
+                	    Song newSong = new Song(songMediaId, duration, songTitle, songRoyaltyRate, songCountry, songLanguage, songAlbumID, songTrackNumber);
+                	    try {
+                	        boolean insertedSong = dao.insertSong(newSong);
+                	        if (insertedSong) {                        	
+                	            System.out.println("Song added successfully with Media ID " + songMediaId);
+                	        } else {
+                	            System.out.println("Song insertion failed");
+                	        }
+                	    } catch (SQLException e) {
+                	        System.out.println("Error adding song: " + e.getMessage());
+                	    }
+                    break;
+                    
+                case 6:
                     // Quit
                 	System.out.println("Goodbye!");
                     scanner.close();
