@@ -12,8 +12,26 @@ public class Song {
     private String language;
     private int albumId;
     private int trackNumber;
+    
+    public Song() {
 
-    public int getMediaId() {
+    }
+    
+    public Song(int mediaId, Time duration, String title, double royaltyRate, String country,
+			String language, int albumId, int trackNumber) {
+		super();
+		this.mediaId = mediaId;
+//		this.releaseDate = releaseDate;
+		this.duration = duration;
+		this.title = title;
+		this.royaltyRate = royaltyRate;
+		this.country = country;
+		this.language = language;
+		this.albumId = albumId;
+		this.trackNumber = trackNumber;
+	}
+
+	public int getMediaId() {
         return mediaId;
     }
 

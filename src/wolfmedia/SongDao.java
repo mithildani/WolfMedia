@@ -1,6 +1,7 @@
 package wolfmedia;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -93,6 +94,55 @@ public class SongDao {
 //
 //        return rowsDeleted > 0;
 //    }
+    
+    public boolean insertSong(Song song) throws SQLException {
+        // Check if album exists
+        String albumSql = "SELECT * FROM aachava2.Album WHERE AlbumID = ?";
+        try (PreparedStatement albumStmt = connection.prepareStatement(albumSql)) {
+            albumStmt.setInt(1, song.getAlbumId());
+            ResultSet albumRs = albumStmt.executeQuery();
+            if (!albumRs.next()) {
+                // Album does not exist, rollback transaction
+                connection.rollback();
+                return false;
+            } else {
+            	// check if artist exists, if not create one
+            }
+        }
+
+        // Check if artist exists
+
+
+        // Insert song
+        String songSql = "INSERT INTO aachava2.Song " +
+            "(MediaID, ReleaseDate, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber) " +
+            "VALUES (?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement songStmt = connection.prepareStatement(songSql)) {
+            connection.setAutoCommit(false);
+            songStmt.setInt(1, song.getMediaId());
+//            songStmt.setDate(2, song.getReleaseDate());
+            songStmt.setTime(2, song.getDuration());
+            songStmt.setString(3, song.getTitle());
+            songStmt.setDouble(4, song.getRoyaltyRate());
+            songStmt.setString(5, song.getCountry());
+            songStmt.setString(6, song.getLanguage());
+            songStmt.setInt(7, song.getAlbumId());
+            songStmt.setInt(8, song.getTrackNumber());
+            
+
+            songStmt.executeUpdate();
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            // Something went wrong, rollback transaction
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
+    }
+
+
 
     public void close() {
         try {
