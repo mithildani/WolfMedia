@@ -1,4 +1,4 @@
-package wolfmedia;
+package wolfmedia.model;
 import java.sql.Date;
 import java.sql.Time;
 

@@ -1,7 +1,6 @@
-package wolfmedia;
+package wolfmedia.api.InformationProcessing;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import wolfmedia.model.Song;
 
 public class SongDao {
     private final Connection connection;
@@ -23,7 +24,7 @@ public class SongDao {
             throw new RuntimeException("Error connecting to database", e);
         }
     }
-    
+
     public Song getSongById(int mediaId) {
         String sql = "SELECT * FROM aachava2.Song WHERE MediaID = ?";
         Song song = null;
@@ -48,8 +49,6 @@ public class SongDao {
         return song;
     }
 
- 
-    
     public List<Song> getAllSongs() {
         String sql = "SELECT * FROM aachava2.Song";
         List<Song> songs = new ArrayList<>();
@@ -73,7 +72,7 @@ public class SongDao {
         }
         return songs;
     }
-    
+
     public int updateSong(int mediaId, String title, String country, String language) throws SQLException {
         String sql = "UPDATE Song SET Title = ?, Country = ?, Language = ? WHERE MediaID = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -84,17 +83,17 @@ public class SongDao {
             return statement.executeUpdate();
         }
     }
-    
-//    public boolean deleteSong(int mediaId) throws SQLException {
-//        String sql = "DELETE FROM Song WHERE MediaID = ?";
-//        PreparedStatement statement = connection.prepareStatement(sql);
-//        statement.setInt(1, mediaId);
-//
-//        int rowsDeleted = statement.executeUpdate();
-//
-//        return rowsDeleted > 0;
-//    }
-    
+
+    // public boolean deleteSong(int mediaId) throws SQLException {
+    // String sql = "DELETE FROM Song WHERE MediaID = ?";
+    // PreparedStatement statement = connection.prepareStatement(sql);
+    // statement.setInt(1, mediaId);
+    //
+    // int rowsDeleted = statement.executeUpdate();
+    //
+    // return rowsDeleted > 0;
+    // }
+
     public boolean insertSong(Song song) throws SQLException {
         // Check if album exists
         String albumSql = "SELECT * FROM aachava2.Album WHERE AlbumID = ?";
@@ -106,21 +105,20 @@ public class SongDao {
                 connection.rollback();
                 return false;
             } else {
-            	// check if artist exists, if not create one
+                // check if artist exists, if not create one
             }
         }
 
         // Check if artist exists
 
-
         // Insert song
         String songSql = "INSERT INTO aachava2.Song " +
-            "(MediaID, ReleaseDate, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber) " +
-            "VALUES (?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)";
+                "(MediaID, ReleaseDate, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber) " +
+                "VALUES (?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement songStmt = connection.prepareStatement(songSql)) {
             connection.setAutoCommit(false);
             songStmt.setInt(1, song.getMediaId());
-//            songStmt.setDate(2, song.getReleaseDate());
+            // songStmt.setDate(2, song.getReleaseDate());
             songStmt.setTime(2, song.getDuration());
             songStmt.setString(3, song.getTitle());
             songStmt.setDouble(4, song.getRoyaltyRate());
@@ -128,7 +126,6 @@ public class SongDao {
             songStmt.setString(6, song.getLanguage());
             songStmt.setInt(7, song.getAlbumId());
             songStmt.setInt(8, song.getTrackNumber());
-            
 
             songStmt.executeUpdate();
             connection.commit();
@@ -141,8 +138,6 @@ public class SongDao {
             connection.setAutoCommit(true);
         }
     }
-
-
 
     public void close() {
         try {
