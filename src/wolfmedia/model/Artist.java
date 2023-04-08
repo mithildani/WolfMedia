@@ -1,4 +1,4 @@
-package wolfmedia;
+package wolfmedia.model;
 
 public class Artist {
     private int artistID;
