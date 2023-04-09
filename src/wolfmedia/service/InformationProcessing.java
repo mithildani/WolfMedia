@@ -198,7 +198,32 @@ public class InformationProcessing {
                    
                     break;
                 case 5:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter artist id of artist to update: ");
+                    int updateArtistId = scanner.nextInt();
+                    scanner.nextLine(); // consume newline character
+                    System.out.print("Enter new name: ");
+                    String updatedArtistName = scanner.nextLine();
+                    System.out.print("Enter new status: ");
+                    String updatedArtistStatus = scanner.nextLine();
+                    System.out.print("Enter new type: ");
+                    String updatedArtistType = scanner.nextLine();
+                    System.out.print("Enter new country: ");
+                    String updatedArtistCountry = scanner.nextLine();
+                    System.out.print("Enter new primary genre: ");
+                    String updatedArtistPrimaryGenre = scanner.nextLine();
+                    try {
+                    	artistDao = new ArtistDao();
+                        int rowsUpdated = artistDao.updateArtist(updateArtistId, updatedArtistName, updatedArtistStatus, updatedArtistType, updatedArtistCountry, updatedArtistPrimaryGenre);
+                        if (rowsUpdated == 1) {
+                            System.out.println("Artist updated successfully.");
+                        } else {
+                            System.out.println("Artist not found.");
+                        }
+                        break;
+                    } catch (SQLException e) {
+                        System.out.println("Error updating Artist: " + e.getMessage());
+                    }
+                    
                     break;
                 case 6:
                     System.out.println("Not Impleented");
