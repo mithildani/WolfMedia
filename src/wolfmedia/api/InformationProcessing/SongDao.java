@@ -101,8 +101,7 @@ public class SongDao {
             albumStmt.setInt(1, song.getAlbumId());
             ResultSet albumRs = albumStmt.executeQuery();
             if (!albumRs.next()) {
-                // Album does not exist, rollback transaction
-                connection.rollback();
+                // Album does not exist
                 return false;
             } else {
                 // check if artist exists, if not create one
@@ -116,7 +115,6 @@ public class SongDao {
                 "(MediaID, ReleaseDate, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber) " +
                 "VALUES (?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement songStmt = connection.prepareStatement(songSql)) {
-            connection.setAutoCommit(false);
             songStmt.setInt(1, song.getMediaId());
             // songStmt.setDate(2, song.getReleaseDate());
             songStmt.setTime(2, song.getDuration());
@@ -128,16 +126,12 @@ public class SongDao {
             songStmt.setInt(8, song.getTrackNumber());
 
             songStmt.executeUpdate();
-            connection.commit();
             return true;
         } catch (SQLException e) {
-            // Something went wrong, rollback transaction
-            connection.rollback();
             throw e;
-        } finally {
-            connection.setAutoCommit(true);
         }
     }
+
 
     public void close() {
         try {
