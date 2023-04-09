@@ -1,5 +1,6 @@
 package wolfmedia;
 
+import java.sql.Connection;
 import java.util.Scanner;
 
 import wolfmedia.service.InformationProcessing;
@@ -64,8 +65,9 @@ public class WolfMediaService {
                     break;
                 case 0:
                     // Quit
-                    System.out.println("Goodbye!");
                     scanner.close();
+                    DBConnection.close();
+                    System.out.println("Goodbye!");
                     System.exit(0);
                     break;
                 default:

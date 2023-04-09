@@ -9,25 +9,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import wolfmedia.DBConnection;
 import wolfmedia.model.Song;
 
 public class SongDao {
-    private final Connection connection;
 
-    public SongDao() {
-        String url = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/aachava2";
-        String user = "aachava2";
-        String password = "200477490";
-        try {
-            this.connection = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            throw new RuntimeException("Error connecting to database", e);
-        }
-    }
+    public SongDao() {}
 
     public Song getSongById(int mediaId) {
         String sql = "SELECT * FROM aachava2.Song WHERE MediaID = ?";
         Song song = null;
+        Connection connection = DBConnection.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, mediaId);
             ResultSet rs = stmt.executeQuery();
@@ -52,6 +44,7 @@ public class SongDao {
     public List<Song> getAllSongs() {
         String sql = "SELECT * FROM aachava2.Song";
         List<Song> songs = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -75,6 +68,7 @@ public class SongDao {
 
     public int updateSong(int mediaId, String title, String country, String language) throws SQLException {
         String sql = "UPDATE Song SET Title = ?, Country = ?, Language = ? WHERE MediaID = ?";
+        Connection connection = DBConnection.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, title);
             statement.setString(2, country);
@@ -97,6 +91,7 @@ public class SongDao {
     public boolean insertSong(Song song) throws SQLException {
         // Check if album exists
         String albumSql = "SELECT * FROM aachava2.Album WHERE AlbumID = ?";
+        Connection connection = DBConnection.getConnection();
         try (PreparedStatement albumStmt = connection.prepareStatement(albumSql)) {
             albumStmt.setInt(1, song.getAlbumId());
             ResultSet albumRs = albumStmt.executeQuery();
@@ -129,15 +124,6 @@ public class SongDao {
             return true;
         } catch (SQLException e) {
             throw e;
-        }
-    }
-
-
-    public void close() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

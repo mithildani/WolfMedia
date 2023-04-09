@@ -9,20 +9,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import wolfmedia.DBConnection;
 import wolfmedia.model.Artist;
 
 public class ArtistDao {
-    private final Connection connection;
 
     public ArtistDao() {
-        String url = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/aachava2";
-        String user = "aachava2";
-        String password = "200477490";
-        try {
-            this.connection = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            throw new RuntimeException("Error connecting to database", e);
-        }
+        
     }
     
    
@@ -31,6 +24,7 @@ public class ArtistDao {
     public List<Artist> getAllArtists() {
         String sql = "SELECT * FROM Artist";
         List<Artist> artists = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -55,6 +49,7 @@ public class ArtistDao {
     public Artist getArtistById(int artistId) {
         String sql = "SELECT * FROM aachava2.Artist WHERE ArtistID = ?";
         Artist artist= null;
+        Connection connection = DBConnection.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, artistId);
             ResultSet rs = stmt.executeQuery();
@@ -76,6 +71,7 @@ public class ArtistDao {
 
     public int updateArtist(int artistId, String name, String status, String type, String country, String primaryGenre) throws SQLException {
         String sql = "UPDATE Artist SET Name = ?, Status = ?, Country = ?, PrimaryGenre = ? WHERE ArtistID = ?";
+        Connection connection = DBConnection.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             statement.setString(2, status);
@@ -86,11 +82,4 @@ public class ArtistDao {
         }
     }
 
-    public void close() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
