@@ -5,6 +5,7 @@ import java.util.Scanner;
 import wolfmedia.service.InformationProcessing;
 import wolfmedia.service.MaintainingMetadata;
 import wolfmedia.service.MaintainingPayments;
+import wolfmedia.service.Miscellaneous;
 import wolfmedia.service.Reports;
 
 public class WolfMediaService {
@@ -19,6 +20,7 @@ public class WolfMediaService {
         System.out.println("2. Maintaining Metadata");
         System.out.println("3. Maintaining Payments");
         System.out.println("4. Reports");
+        System.out.println("5. Extras");
         System.out.println("");
         System.out.println("0. Quit");
         System.out.println("");
@@ -55,6 +57,10 @@ public class WolfMediaService {
                 case 4:
                     Reports r = new Reports();
                     r.process();
+                    break;
+                case 5:
+                    Miscellaneous m = new Miscellaneous();
+                    m.process();
                     break;
                 case 0:
                     // Quit
