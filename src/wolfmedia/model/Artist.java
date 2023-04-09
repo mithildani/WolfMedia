@@ -13,8 +13,9 @@ public class Artist {
     }
 
     // Constructor with parameters
-    public Artist(String name, String status, String type, String country, String primaryGenre) {
-        this.name = name;
+    public Artist(int artistId, String name, String status, String type, String country, String primaryGenre) {
+        this.artistID = artistId;
+    	this.name = name;
         this.status = status;
         this.type = type;
         this.country = country;
