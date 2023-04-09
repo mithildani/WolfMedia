@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
+import wolfmedia.api.InformationProcessing.ArtistDao;
 import wolfmedia.api.InformationProcessing.SongDao;
+import wolfmedia.model.Artist;
 import wolfmedia.model.Song;
 
 public class InformationProcessing {
@@ -56,11 +58,16 @@ public class InformationProcessing {
 
             // Get user input
             int option = scanner.nextInt();
-            SongDao dao = new SongDao();
+            //DBConnection db = new DBConnection();
+            // db.connect();
+            SongDao songDao = null;
+            ArtistDao artistDao = null;
+            
             // Handle user input
             switch (option) {
                 case 1:
                     // Add a new song
+                	
                     System.out.print("Enter media ID: ");
                     int songMediaId = scanner.nextInt();
                     scanner.nextLine(); // consume newline character
@@ -100,7 +107,8 @@ public class InformationProcessing {
                     Song newSong = new Song(songMediaId, duration, songTitle, songRoyaltyRate, songCountry,
                             songLanguage, songAlbumID, songTrackNumber);
                     try {
-                        boolean insertedSong = dao.insertSong(newSong);
+                    	songDao = new SongDao();
+                        boolean insertedSong = songDao.insertSong(newSong);
                         if (insertedSong) {
                             System.out.println("Song added successfully with Media ID " + songMediaId);
                         } else {
@@ -111,6 +119,7 @@ public class InformationProcessing {
                     }
                     break;
                 case 2:
+                	
                     System.out.print("Enter media id of song to update: ");
                     int updatedMediaId = scanner.nextInt();
                     scanner.nextLine(); // consume newline character
@@ -121,7 +130,8 @@ public class InformationProcessing {
                     System.out.print("Enter new language: ");
                     String language = scanner.nextLine();
                     try {
-                        int rowsUpdated = dao.updateSong(updatedMediaId, title, country, language);
+                    	songDao = new SongDao();
+                        int rowsUpdated = songDao.updateSong(updatedMediaId, title, country, language);
                         if (rowsUpdated == 1) {
                             System.out.println("Song updated successfully.");
                         } else {
@@ -133,10 +143,12 @@ public class InformationProcessing {
                     }
                     break;
                 case 3:
+
                     // System.out.print("Enter MediaID: ");
                     // int mediaIdToDelete = scanner.nextInt();
                     //
                     // try {
+                	//songDao = new SongDao();
                     // boolean deleteResult = dao.deleteSong(mediaIdToDelete);
                     // if (deleteResult) {
                     // System.out.println("Song deleted successfully");
@@ -151,7 +163,39 @@ public class InformationProcessing {
                     System.out.println("Not Impleented");
                     break; 
                 case 4:
-                    System.out.println("Not Impleented");
+                	
+                	// Add a new artist
+                	System.out.print("Enter Artist ID: ");
+                    int artistId = scanner.nextInt();
+                    scanner.nextLine();
+                	System.out.print("Enter artist name: ");
+                	String artistName = scanner.nextLine();
+                	
+                	System.out.print("Enter status: ");
+                	String artistStatus = scanner.nextLine();
+                
+                	System.out.print("Enter type: ");
+                	String artistType = scanner.nextLine();
+                	
+                	System.out.print("Enter country: ");
+                	String artistCountry = scanner.nextLine();
+                	
+                	System.out.print("Enter primary genre: ");
+                	String artistPrimaryGenre = scanner.nextLine();
+                	
+                	Artist newArtist = new Artist(artistId, artistName, artistStatus, artistType, artistCountry, artistPrimaryGenre);
+                	try {
+                		artistDao = new ArtistDao();
+                	    boolean insertedArtist = artistDao.insertArtist(newArtist);
+                	    if (insertedArtist) {
+                	        System.out.println("Artist added successfully with ID " + newArtist.getArtistID());
+                	    } else {
+                	        System.out.println("Artist insertion failed");
+                	    }
+                	} catch (SQLException e) {
+                	    System.out.println("Error adding artist: " + e.getMessage());
+                	}
+                   
                     break;
                 case 5:
                     System.out.println("Not Impleented");

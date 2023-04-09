@@ -81,5 +81,23 @@ public class ArtistDao {
             return statement.executeUpdate();
         }
     }
+    
+    public boolean insertArtist(Artist artist) throws SQLException {
+        String sql = "INSERT INTO Artist (ArtistID, Name, Status, Type, Country, PrimaryGenre) " +
+                     "VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        	stmt.setInt(1, artist.getArtistID());
+            stmt.setString(2, artist.getName());
+            stmt.setString(3, artist.getStatus());
+            stmt.setString(4, artist.getType());
+            stmt.setString(5, artist.getCountry());
+            stmt.setString(6, artist.getPrimaryGenre());
+            int rowsAffected = stmt.executeUpdate();
+            return (rowsAffected == 1);
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
 
 }

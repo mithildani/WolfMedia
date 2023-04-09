@@ -120,8 +120,8 @@ public class SongDao {
             songStmt.setInt(7, song.getAlbumId());
             songStmt.setInt(8, song.getTrackNumber());
 
-            songStmt.executeUpdate();
-            return true;
+            int rowsAffected = songStmt.executeUpdate();
+            return (rowsAffected == 1);
         } catch (SQLException e) {
             throw e;
         }
