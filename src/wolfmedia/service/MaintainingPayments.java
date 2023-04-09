@@ -16,9 +16,9 @@ public class MaintainingPayments {
         System.out.println("");
         System.out.println("Please select an option:");
         System.out.println("");
-        System.out.println("1. TODO");
-        System.out.println("2. TODO");
-        System.out.println("3. TODO");
+        System.out.println("1. create Song Payment");
+        System.out.println("2. create Podcast Payment");
+        System.out.println("3. create Subscriber Payment");
 
         System.out.println("");
         System.out.println("0. Return");
@@ -34,10 +34,13 @@ public class MaintainingPayments {
             // Handle user input
             switch (option) {
                 case 1:
+                    System.out.println("Not Impleented");
                     break;
                 case 2:
+                    System.out.println("Not Impleented");
                     break;
                 case 3:
+                    System.out.println("Not Impleented");
                     break;
                 case 0:
                     return;

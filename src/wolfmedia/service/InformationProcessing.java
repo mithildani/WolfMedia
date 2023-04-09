@@ -23,12 +23,29 @@ public class InformationProcessing {
         System.out.println("");
         System.out.println("Please select an option:");
         System.out.println("");
-        System.out.println("1. Display all songs");
-        System.out.println("2. Display a song by Media ID");
-        System.out.println("3. Update a Song by Media ID");
-        System.out.println("4**. Delete song by MediaID");
-        System.out.println("5. Enter a new song");
-        System.out.println("");
+
+        System.out.println("1. enter Song");
+        System.out.println("2. update Song");
+        System.out.println("3. delete Song");
+        System.out.println();
+        System.out.println("4. enter Artist");
+        System.out.println("5. update Artist");
+        System.out.println("6. delete Artist");
+        System.out.println();
+        System.out.println("7. enter Podcast Host");
+        System.out.println("8. update Podcast Host");
+        System.out.println("9. delete Podcast Host");
+        System.out.println();
+        System.out.println("10. enter Podcast Episode");
+        System.out.println("11. update Podcast Episode");
+        System.out.println("12. delete Podcast Episode");
+        System.out.println();
+        System.out.println("13. assign Song To Album");
+        System.out.println("14. assign Artist To Album");
+        System.out.println("15. assign Artist To RecordLabel");
+        System.out.println("16. assign Podcast Episode To Podcast");
+        System.out.println("17. assign Host To Podcast");
+
         System.out.println("0. Return");
     }
 
@@ -43,69 +60,6 @@ public class InformationProcessing {
             // Handle user input
             switch (option) {
                 case 1:
-                    // Display all songs
-
-                    List<Song> songs = dao.getAllSongs();
-                    for (Song song : songs) {
-                        System.out.println(song.getTitle() + " by " + song.getLanguage() + " artist, released on "
-                                + song.getReleaseDate());
-                    }
-                    break;
-                case 2:
-                    // Display a song by Media ID
-                    System.out.println("Enter Media ID:");
-                    int mediaId = scanner.nextInt();
-                    Song song = dao.getSongById(mediaId);
-                    if (song != null) {
-                        System.out.println(song.getTitle() + " by " + song.getLanguage() + " artist, released on "
-                                + song.getReleaseDate());
-                    } else {
-                        System.out.println("Song with Media ID " + mediaId + " not found.");
-                    }
-                    break;
-                case 3:
-                    System.out.print("Enter media id of song to update: ");
-                    int updatedMediaId = scanner.nextInt();
-                    scanner.nextLine(); // consume newline character
-                    System.out.print("Enter new title: ");
-                    String title = scanner.nextLine();
-                    System.out.print("Enter new country: ");
-                    String country = scanner.nextLine();
-                    System.out.print("Enter new language: ");
-                    String language = scanner.nextLine();
-                    try {
-                        int rowsUpdated = dao.updateSong(updatedMediaId, title, country, language);
-                        if (rowsUpdated == 1) {
-                            System.out.println("Song updated successfully.");
-
-                        } else {
-                            System.out.println("Song not found.");
-
-                        }
-                        break;
-                    } catch (SQLException e) {
-                        System.out.println("Error updating song: " + e.getMessage());
-                    }
-
-                case 4:
-                    // System.out.print("Enter MediaID: ");
-                    // int mediaIdToDelete = scanner.nextInt();
-                    //
-                    // try {
-                    // boolean deleteResult = dao.deleteSong(mediaIdToDelete);
-                    // if (deleteResult) {
-                    // System.out.println("Song deleted successfully");
-                    // } else {
-                    // System.out.println("Failed to delete song");
-                    // }
-                    // break;
-                    // } catch (SQLException e) {
-                    // // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                    // }
-                    break;
-                case 5:
-
                     // Add a new song
                     System.out.print("Enter media ID: ");
                     int songMediaId = scanner.nextInt();
@@ -156,7 +110,88 @@ public class InformationProcessing {
                         System.out.println("Error adding song: " + e.getMessage());
                     }
                     break;
-
+                case 2:
+                    System.out.print("Enter media id of song to update: ");
+                    int updatedMediaId = scanner.nextInt();
+                    scanner.nextLine(); // consume newline character
+                    System.out.print("Enter new title: ");
+                    String title = scanner.nextLine();
+                    System.out.print("Enter new country: ");
+                    String country = scanner.nextLine();
+                    System.out.print("Enter new language: ");
+                    String language = scanner.nextLine();
+                    try {
+                        int rowsUpdated = dao.updateSong(updatedMediaId, title, country, language);
+                        if (rowsUpdated == 1) {
+                            System.out.println("Song updated successfully.");
+                        } else {
+                            System.out.println("Song not found.");
+                        }
+                        break;
+                    } catch (SQLException e) {
+                        System.out.println("Error updating song: " + e.getMessage());
+                    }
+                    break;
+                case 3:
+                    // System.out.print("Enter MediaID: ");
+                    // int mediaIdToDelete = scanner.nextInt();
+                    //
+                    // try {
+                    // boolean deleteResult = dao.deleteSong(mediaIdToDelete);
+                    // if (deleteResult) {
+                    // System.out.println("Song deleted successfully");
+                    // } else {
+                    // System.out.println("Failed to delete song");
+                    // }
+                    // break;
+                    // } catch (SQLException e) {
+                    // // TODO Auto-generated catch block
+                    // e.printStackTrace();
+                    // }
+                    System.out.println("Not Impleented");
+                    break; 
+                case 4:
+                    System.out.println("Not Impleented");
+                    break;
+                case 5:
+                    System.out.println("Not Impleented");
+                    break;
+                case 6:
+                    System.out.println("Not Impleented");
+                    break;
+                case 7:
+                    System.out.println("Not Impleented");
+                    break;
+                case 8:
+                    System.out.println("Not Impleented");
+                    break;
+                case 9:
+                    System.out.println("Not Impleented");
+                    break;
+                case 10:
+                    System.out.println("Not Impleented");
+                    break;
+                case 11:
+                    System.out.println("Not Impleented");
+                    break;
+                case 12:
+                    System.out.println("Not Impleented");
+                    break;    
+                case 13:
+                    System.out.println("Not Impleented");
+                    break;
+                case 14:
+                    System.out.println("Not Impleented");
+                    break;
+                case 15:
+                    System.out.println("Not Impleented");
+                    break;
+                case 16:
+                    System.out.println("Not Impleented");
+                    break;
+                case 17:
+                    System.out.println("Not Impleented");
+                    break;
                 case 0:
                     return;
                 default:
