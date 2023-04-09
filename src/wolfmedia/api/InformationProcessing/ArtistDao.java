@@ -85,6 +85,7 @@ public class ArtistDao {
     public boolean insertArtist(Artist artist) throws SQLException {
         String sql = "INSERT INTO Artist (ArtistID, Name, Status, Type, Country, PrimaryGenre) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
+        Connection connection = DBConnection.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
         	stmt.setInt(1, artist.getArtistID());
             stmt.setString(2, artist.getName());
