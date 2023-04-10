@@ -1,6 +1,11 @@
 package wolfmedia.service;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
+
+import wolfmedia.api.InformationProcessing.SongDao;
+import wolfmedia.model.Song;
 
 public class MaintainingMetadata {
     private Scanner scanner;
@@ -46,6 +51,7 @@ public class MaintainingMetadata {
             // Get user input
             int option = scanner.nextInt();
             // Handle user input
+            SongDao songDao = null;
             switch (option) {
                 case 1:
                     System.out.println("Not Impleented");
@@ -78,10 +84,46 @@ public class MaintainingMetadata {
                     System.out.println("Not Impleented");
                     break;
                 case 11:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the artist id: ");
+                	int aID= scanner.nextInt();
+
+                	try {
+                	     songDao = new SongDao();
+                	    List<Song> songs = songDao.getSongsByArtist(aID);
+
+                	    if (songs.isEmpty()) {
+                	        System.out.println("No songs found for artist " + aID);
+                	    } else {
+                	        System.out.println("Songs for artist " + aID + ":");
+                	        for (Song song : songs) {
+                	            System.out.println(song.getTitle());
+                	        }
+                	    }
+                	} catch (SQLException e) {
+                	    System.out.println("Error retrieving songs by artist: " + e.getMessage());
+                	}
+
                     break;
                 case 12:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the album id: ");
+                	int albID= scanner.nextInt();
+
+                	try {
+                	     songDao = new SongDao();
+                	    List<Song> songs = songDao.getSongsByAlbum(albID);
+
+                	    if (songs.isEmpty()) {
+                	        System.out.println("No songs found for album " + albID);
+                	    } else {
+                	        System.out.println("Songs for album " + albID + ":");
+                	        for (Song song : songs) {
+                	            System.out.println(song.getTitle());
+                	        }
+                	    }
+                	} catch (SQLException e) {
+                	    System.out.println("Error retrieving songs by artist: " + e.getMessage());
+                	}
+
                     break;
                 case 13:
                     System.out.println("Not Impleented");
