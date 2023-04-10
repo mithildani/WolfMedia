@@ -99,6 +99,35 @@ public class ArtistDao {
             throw e;
         }
     }
+    
+    public int assignArtistToAlbum(int artistId, int albumId) throws SQLException {
+        String query = "UPDATE Album SET ArtistID = ? WHERE AlbumID = ?";
+        Connection connection = DBConnection.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, artistId);
+            stmt.setInt(2, albumId);
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated;
+        }
+    }
+    
+    public int assignArtistToRecordLabel(int artistId, String labelName) throws SQLException{
+        String query = "INSERT INTO Contract (LabelName, ArtistID, StartDate) VALUES (?, ?, CURDATE())";
+        int rowsUpdated = 0;
+        Connection conn = DBConnection.getConnection();
+        try (
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, labelName);
+            stmt.setInt(2, artistId);
+            rowsUpdated = stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("Error assigning artist to record label: " + ex.getMessage());
+        }
+
+        return rowsUpdated;
+    }
+
+
 
 
 }

@@ -126,4 +126,17 @@ public class SongDao {
             throw e;
         }
     }
+    
+    public int assignSongToAlbum(int songMediaId, int albumId) throws SQLException {
+        String sql = "UPDATE Song SET AlbumID = ? WHERE MediaID = ?";
+        Connection conn = DBConnection.getConnection();
+        try (
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, albumId);
+            pstmt.setInt(2, songMediaId);
+
+            return pstmt.executeUpdate();
+        }
+    }
 }

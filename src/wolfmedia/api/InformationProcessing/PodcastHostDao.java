@@ -95,6 +95,23 @@ public class PodcastHostDao {
 	            throw e;
 	        }
 	    }
+	    
+	    public int assignHostToPodcast(int hostId, int podcastId) throws SQLException {
+	        String query = "UPDATE aachava2.Podcast SET HostID = ? WHERE PodcastID = ?";
+	        Connection conn = DBConnection.getConnection();
+	        try (
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	            stmt.setInt(1, hostId);
+	            stmt.setInt(2, podcastId);
+
+	            return stmt.executeUpdate();
+
+	        } catch (SQLException e) {
+	            throw new SQLException("Error assigning Podcast Host to Podcast: " + e.getMessage());
+	        }
+	    }
+
 	 
 
 }
