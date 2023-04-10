@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import wolfmedia.api.InformationProcessing.ArtistDao;
+import wolfmedia.api.InformationProcessing.PodcastHostDao;
 import wolfmedia.api.InformationProcessing.SongDao;
 import wolfmedia.model.Artist;
+import wolfmedia.model.PodcastHost;
 import wolfmedia.model.Song;
 
 public class InformationProcessing {
@@ -58,10 +60,11 @@ public class InformationProcessing {
 
             // Get user input
             int option = scanner.nextInt();
-            //DBConnection db = new DBConnection();
-            // db.connect();
+            
+            // Initialize all the Data Access Objects
             SongDao songDao = null;
             ArtistDao artistDao = null;
+            PodcastHostDao hostDao =null;
             
             // Handle user input
             switch (option) {
@@ -198,6 +201,7 @@ public class InformationProcessing {
                    
                     break;
                 case 5:
+                	//update an artist
                 	System.out.print("Enter artist id of artist to update: ");
                     int updateArtistId = scanner.nextInt();
                     scanner.nextLine(); // consume newline character
@@ -229,10 +233,68 @@ public class InformationProcessing {
                     System.out.println("Not Impleented");
                     break;
                 case 7:
-                    System.out.println("Not Impleented");
+                	// Add a new host
+                	System.out.print("Enter Host ID: ");
+                    int hostId = scanner.nextInt();
+                    scanner.nextLine();
+                	System.out.print("Enter host's first name: ");
+                	String fName = scanner.nextLine();
+                	
+                	System.out.print("Enter host's last name: ");
+                	String lName = scanner.nextLine();
+                
+                	System.out.print("Enter city: ");
+                	String city = scanner.nextLine();
+                	
+                	System.out.print("Enter email: ");
+                	String email = scanner.nextLine();
+                	
+                	System.out.print("Enter phone: ");
+                	String phone = scanner.nextLine();
+                	
+                	PodcastHost newHost = new PodcastHost(hostId, fName, lName, city, email, phone);
+                	try {
+                		hostDao = new PodcastHostDao();
+                	    boolean insertedHost = hostDao.insertPodcastHost(newHost);
+                	    if (insertedHost) {
+                	        System.out.println("Host added successfully with ID " + newHost.getHostID());
+                	    } else {
+                	        System.out.println("Host insertion failed");
+                	    }
+                	} catch (SQLException e) {
+                	    System.out.println("Error adding artist: " + e.getMessage());
+                	}
+                   
+                    
                     break;
                 case 8:
-                    System.out.println("Not Impleented");
+              
+                	//update a PodcastHost
+                	System.out.print("Enter HostID of the host to update: ");
+                	int updateHostID = scanner.nextInt();
+                	scanner.nextLine(); // consume newline character
+                	System.out.print("Enter new first name: ");
+                	String updatedFirstName = scanner.nextLine();
+                	System.out.print("Enter new last name: ");
+                	String updatedLastName = scanner.nextLine();
+                	System.out.print("Enter new city: ");
+                	String updatedCity = scanner.nextLine();
+                	System.out.print("Enter new email: ");
+                	String updatedEmail = scanner.nextLine();
+                	System.out.print("Enter new phone number: ");
+                	String updatedPhoneNumber = scanner.nextLine();
+                	try {
+                	hostDao = new PodcastHostDao();
+                	int rowsUpdated = hostDao.updatePodcastHost(updateHostID, updatedFirstName, updatedLastName, updatedCity, updatedEmail, updatedPhoneNumber);
+                	if (rowsUpdated == 1) {
+                	System.out.println("Podcast host updated successfully.");
+                	} else {
+                	System.out.println("Podcast host not found.");
+                	}
+                	break;
+                	} catch (SQLException e) {
+                	System.out.println("Error updating Podcast Host: " + e.getMessage());
+                	}
                     break;
                 case 9:
                     System.out.println("Not Impleented");
