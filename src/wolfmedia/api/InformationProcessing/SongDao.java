@@ -127,6 +127,7 @@ public class SongDao {
         }
     }
     
+
     public int assignSongToAlbum(int songMediaId, int albumId) throws SQLException {
         String sql = "UPDATE Song SET AlbumID = ? WHERE MediaID = ?";
         Connection conn = DBConnection.getConnection();
@@ -139,4 +140,68 @@ public class SongDao {
             return pstmt.executeUpdate();
         }
     }
+
+    public List<Song> getSongsByArtist(int aID) throws SQLException {
+        List<Song> songs = new ArrayList<>();
+        String query = "SELECT s.MediaID, s.ReleaseDate, s.Duration, s.Title, s.RoyaltyRate, " +
+                       "s.Country, s.Language, s.AlbumID, s.TrackNumber " +
+                       "FROM Song s INNER JOIN Collaborated c ON s.MediaID = c.MediaID " +
+                       "INNER JOIN Artist a ON c.ArtistID = a.ArtistID " +
+                       "WHERE a.ArtistID = ?";
+        Connection conn = DBConnection.getConnection();
+        try (
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, aID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Song song = new Song();
+                    song.setMediaId(rs.getInt("MediaID"));
+                    song.setReleaseDate(rs.getDate("ReleaseDate"));
+                    song.setDuration(rs.getTime("Duration"));
+                    song.setTitle(rs.getString("Title"));
+                    song.setRoyaltyRate(rs.getDouble("RoyaltyRate"));
+                    song.setCountry(rs.getString("Country"));
+                    song.setLanguage(rs.getString("Language"));
+                    song.setAlbumId(rs.getInt("AlbumID"));
+                    song.setTrackNumber(rs.getInt("TrackNumber"));
+                    songs.add(song);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving songs by artist: " + e.getMessage());
+            throw e;
+        }
+        return songs;
+    }
+    
+    public List<Song> getSongsByAlbum(int aID) throws SQLException {
+        List<Song> songs = new ArrayList<>();
+        String query = "SELECT S.* FROM Song S INNER JOIN Album A on S.AlbumID = A.AlbumID where A.AlbumID = ?";
+        Connection conn = DBConnection.getConnection();
+        try (
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, aID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Song song = new Song();
+                    song.setMediaId(rs.getInt("MediaID"));
+                    song.setReleaseDate(rs.getDate("ReleaseDate"));
+                    song.setDuration(rs.getTime("Duration"));
+                    song.setTitle(rs.getString("Title"));
+                    song.setRoyaltyRate(rs.getDouble("RoyaltyRate"));
+                    song.setCountry(rs.getString("Country"));
+                    song.setLanguage(rs.getString("Language"));
+                    song.setAlbumId(rs.getInt("AlbumID"));
+                    song.setTrackNumber(rs.getInt("TrackNumber"));
+                    songs.add(song);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving songs by artist: " + e.getMessage());
+            throw e;
+        }
+        return songs;
+    }
+
+
 }
