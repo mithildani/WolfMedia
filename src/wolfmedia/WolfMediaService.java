@@ -1,6 +1,7 @@
 package wolfmedia;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import wolfmedia.service.InformationProcessing;
@@ -27,7 +28,7 @@ public class WolfMediaService {
         System.out.println("");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         // Create a scanner for user input
         Scanner scanner = new Scanner(System.in);

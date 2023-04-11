@@ -1,17 +1,25 @@
 package wolfmedia.service;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
+import java.text.ParseException;
 
+import wolfmedia.DBConnection;
 import wolfmedia.api.InformationProcessing.ArtistDao;
+import wolfmedia.api.InformationProcessing.PodcastEpisodeDao;
 import wolfmedia.api.InformationProcessing.PodcastHostDao;
 import wolfmedia.api.InformationProcessing.SongDao;
 import wolfmedia.model.Artist;
 import wolfmedia.model.PodcastHost;
+import wolfmedia.model.PodcastEpisode;
 import wolfmedia.model.Song;
+
 
 public class InformationProcessing {
     private Scanner scanner;
@@ -53,7 +61,7 @@ public class InformationProcessing {
         System.out.println("0. Return");
     }
 
-    public void process() {
+    public void process() throws SQLException {
         while (true) {
 
             printMenu();
@@ -65,6 +73,7 @@ public class InformationProcessing {
             SongDao songDao = null;
             ArtistDao artistDao = null;
             PodcastHostDao hostDao =null;
+            PodcastEpisodeDao peDao = null;
             
             // Handle user input
             switch (option) {
@@ -300,13 +309,167 @@ public class InformationProcessing {
                     System.out.println("Not Impleented");
                     break;
                 case 10:
-                    System.out.println("Not Impleented");
+                	// Add PodCast episode
+                	System.out.println("Enter the Media ID : ");
+                	int peMediaId = scanner.nextInt();
+                	scanner.nextLine();
+                	System.out.println("Enter the Title : ");
+                	String petitle = scanner.nextLine();
+                	
+                	System.out.println("Enter duration (hh:mm:ss): ");
+                    Time peduration = null;
+                    if (scanner.hasNextLine()) {
+                        String pedurationStr = scanner.nextLine();
+
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                            java.util.Date date = sdf.parse(pedurationStr);
+                            peduration = new Time(date.getTime());
+                        } catch (Exception e) {
+                            System.out.println("Invalid time format. Please try again.");
+                            return;
+                        }
+                    } else {
+                        System.out.println("No input available");
+                        return;
+                    }
+                	
+                	System.out.println("Enter Ad Rate : ");
+                	double peadrate = scanner.nextDouble();
+                	
+                	System.out.println("Enter Flat Fee : ");
+                	double peflatfee = scanner.nextDouble();
+                	
+                	System.out.println("Enter Podcast ID : ");
+                	int pepodcastid = scanner.nextInt();
+                	scanner.nextLine();
+                	
+                	System.out.println("Enter Release Date (yyyy-mm-dd): ");
+                	String pereleasedateStr = scanner.next();
+                    if (scanner.hasNextLine()) {
+                    	                        	
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                        java.util.Date pereleaseDate = null;
+                        try {
+                        	System.out.println(pereleaseDate);
+                        	System.out.println(pereleasedateStr);
+                            pereleaseDate = dateFormat.parse(pereleasedateStr);
+                        } catch (Exception e) {
+                            System.out.println("Invalid Date format. Please try again.");
+                            return;
+                        }
+                    } else {
+                        System.out.println("No input available");
+                        return;
+                    }
+                	
+				String pereleasedate = null;				
+				String sql = "INSERT INTO Media (MediaID) " + "VALUES (?)";
+				Connection connection = DBConnection.getConnection();
+				try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+					stmt.setInt(1, peMediaId);
+					stmt.executeQuery();
+		        } catch (SQLException e) {
+		            throw e;
+		        }
+					PodcastEpisode pe = new PodcastEpisode(peMediaId, pepodcastid, petitle, peduration, peadrate, peflatfee, pereleasedateStr);
+                	try {
+                		peDao = new PodcastEpisodeDao();
+                		boolean insertedPodcastEpisode = peDao.insertPodcastEpisode(pe);
+                		if (insertedPodcastEpisode) {
+                			System.out.println("Podcast Episode inserted sucessfully");
+                		}
+                		else {
+                			System.out.println("PodcastEpisode insertion failed");
+                		}
+                	}
+                		catch (SQLException e) {
+                    	    System.out.println("Error adding Podcast Episode: " + e.getMessage());
+                		}
+            
                     break;
                 case 11:
-                    System.out.println("Not Impleented");
-                    break;
+                	// Update Podcast Episode
+                	System.out.println("Enter MediaId of Podcast Episode to update : ");
+                	int updatepemediaid = scanner.nextInt();
+                	System.out.println("Enter new title : ");
+                	String updatepetitle = scanner.next();
+                	System.out.println("Enter new Ad Rate : ");
+                	double updatepeadrate = scanner.nextDouble();
+                	System.out.println("Enter new Flat Fee : ");
+                	double updatepeflatfee = scanner.nextDouble();
+                	System.out.println("Enter duration (hh:mm:ss): ");
+                	scanner.nextLine();
+                    Time updatepeduration = null;
+                    if (scanner.hasNextLine()) {
+                        String updatepedurationStr = scanner.nextLine();
+
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                            java.util.Date date = sdf.parse(updatepedurationStr);
+                            updatepeduration = new Time(date.getTime());
+                        } catch (Exception e) {
+                            System.out.println("Invalid time format. Please try again.");
+                            return;
+                        }
+                    } else {
+                        System.out.println("No input available");
+                        return;
+                    }
+                    
+                    System.out.println("Enter Release Date (yyyy-mm-dd): ");
+                	String updatepereleasedateStr = scanner.next();
+                    if (scanner.hasNextLine()) {
+                    	                        	
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                        java.util.Date updatepereleaseDate = null;
+                        try {
+                        	System.out.println(updatepereleaseDate);
+                        	System.out.println(updatepereleasedateStr);
+                            updatepereleaseDate = dateFormat.parse(updatepereleasedateStr);
+                        } catch (Exception e) {
+                            System.out.println("Invalid Date format. Please try again.");
+                            return;
+                        }
+                    } else {
+                        System.out.println("No input available");
+                        return;
+                    }
+                	
+                	try {
+                		peDao = new PodcastEpisodeDao();
+                		int rowsUpdated = peDao.updatePodcastEpisode(updatepemediaid, updatepetitle, updatepeadrate, updatepeflatfee, updatepeduration, updatepereleasedateStr);
+                		if (rowsUpdated == 1) {
+                			System.out.println("Podcast Episode Updated successfully");
+                		}
+                		else {
+                			System.out.println("Podcast Episode not found");
+                		}
+                		break;
+                	}catch(SQLException e) {
+                		System.out.println("Error update Podcast Episode " + e.getMessage());
+                	}
+                	break;
+                	
                 case 12:
-                    System.out.println("Not Impleented");
+                	// Delete Podcast Episode
+                	
+                	System.out.println("Enter MediaID of podcast episode to be deleted : ");
+                	int deletepemediaid = scanner.nextInt();
+                	try {
+                		peDao = new PodcastEpisodeDao();
+                		int deletedPodcastEpisode = peDao.deletePodcastEpisode(deletepemediaid);
+                		System.out.println("LALAAL" + deletedPodcastEpisode);
+                		if (deletedPodcastEpisode == 1) {
+                			System.out.println("Podcast Episode deleted successfully");
+                		}
+                		else {
+                			System.out.println("Podcast Episode deletion failed");
+                		}
+                	}
+                		catch (SQLException e) {
+                			System.out.println("Error deleting Podcast Episode : " + e.getMessage());
+                		}
                     break;    
                 case 13:
                 	//song to album
