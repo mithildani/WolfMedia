@@ -309,19 +309,98 @@ public class InformationProcessing {
                     System.out.println("Not Impleented");
                     break;    
                 case 13:
-                    System.out.println("Not Impleented");
+                	//song to album
+                	System.out.print("Enter the ID of the song to assign: ");
+                	int songMediaID = scanner.nextInt();
+                	scanner.nextLine(); // consume newline character
+                	System.out.print("Enter the ID of the album to assign the song to: ");
+                	int albumId = scanner.nextInt();
+                	scanner.nextLine(); // consume newline character
+                    try {
+                    	songDao = new SongDao();
+                    	int rowsUpdated = songDao.assignSongToAlbum(songMediaID, albumId);
+                    	if (rowsUpdated == 1) {
+                    		System.out.println("Song assigned to album successfully.");
+                    		} else {
+                    		System.out.println("Song or album not found.");
+                    		}
+                    }catch (SQLException e) {
+                    	System.out.println("Error assigning Song to Album: " + e.getMessage());
+                    }
                     break;
                 case 14:
-                    System.out.println("Not Impleented");
+                	//artist to album
+                	
+                	System.out.print("Enter artist ID: ");
+                	int artistID = scanner.nextInt();
+                	scanner.nextLine(); 
+                	System.out.print("Enter album ID: ");
+                	int albumID = scanner.nextInt();
+                	scanner.nextLine(); 
+                	try {
+                		artistDao = new ArtistDao();
+                		int rowsUpdated = artistDao.assignArtistToAlbum(artistID, albumID);
+
+                    	if (rowsUpdated == 1) {
+                    	    System.out.println("Artist assigned to album successfully.");
+                    	} else {
+                    	    System.out.println("Artist or album not found.");
+                    	}
+                	} catch (SQLException e) {
+                		System.out.println("Error assigning Artist to Album: " + e.getMessage());
+                	}
+
                     break;
                 case 15:
-                    System.out.println("Not Impleented");
+                    // assign artist to record label
+                	
+                	System.out.print("Enter the artist ID: ");
+                	int aId = scanner.nextInt();
+                	scanner.nextLine(); 
+                	
+                	System.out.print("Enter the label name: ");
+                	String labelName = scanner.next();
+                	scanner.nextLine(); 
+                	
+                	try {
+                		artistDao = new ArtistDao();
+                		int rowsUpdated = artistDao.assignArtistToRecordLabel(aId, labelName);
+
+                		if (rowsUpdated == 1) {
+                		    System.out.println("Artist assigned to label successfully.");
+                		} else {
+                		    System.out.println("Artist or label not found.");
+                		}
+                	}catch (SQLException e) {
+                		System.out.println("Error assigning Artist to Record Label: " + e.getMessage());
+                	}
                     break;
                 case 16:
                     System.out.println("Not Impleented");
                     break;
                 case 17:
-                    System.out.println("Not Impleented");
+                	// assign podcast host to podcast
+                	System.out.print("Enter the host ID: ");
+                	int hId = scanner.nextInt();
+                	scanner.nextLine();
+
+                	System.out.print("Enter the podcast ID: ");
+                	int pId = scanner.nextInt();
+                	scanner.nextLine();
+
+                	try {
+                	    hostDao = new PodcastHostDao();
+                	    int rowsUpdated = hostDao.assignHostToPodcast(hId, pId);
+
+                	    if (rowsUpdated == 1) {
+                	        System.out.println("Podcast host assigned to podcast successfully.");
+                	    } else {
+                	        System.out.println("Podcast host or podcast not found.");
+                	    }
+                	} catch (SQLException e) {
+                	    System.out.println("Error assigning podcast host to podcast: " + e.getMessage());
+                	}
+
                     break;
                 case 0:
                     return;
