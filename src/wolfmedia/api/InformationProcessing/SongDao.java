@@ -201,6 +201,62 @@ public class SongDao {
         }
         return songs;
     }
+    
+    public void simulateSongPlayback(int userId, int mediaId) throws SQLException {
+    	Connection conn = DBConnection.getConnection();
+    	try {
+    		// Check if there is an existing playback record for this user and song on the current day
+            PreparedStatement stmt = conn.prepareStatement("SELECT Count FROM aachava2.Playbacks WHERE UserID = ? AND MediaID = ? AND MONTH(PlayedAt) = MONTH(CURDATE())");
+            stmt.setInt(1, userId);
+            stmt.setInt(2, mediaId);
+            
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // If there is an existing record, increment the playcount
+                int playCount = rs.getInt("Count") + 1;
+                stmt = conn.prepareStatement("UPDATE aachava2.Playbacks SET Count = ? WHERE UserID = ? AND MediaID = ? AND PlayedAt = CURDATE()");
+                stmt.setInt(1, playCount);
+                stmt.setInt(2, userId);
+                stmt.setInt(3, mediaId);
+                
+                stmt.executeUpdate();
+                System.out.println("You have played this song " + playCount + " times now!");
+            } else {
+                // If there is no existing record, create a new playback record with playcount 1
+                stmt = conn.prepareStatement("INSERT INTO aachava2.Playbacks (MediaID, UserID, PlayedAt, Count) VALUES (?, ?, CURDATE(), 1)");
+                stmt.setInt(1, mediaId);
+                stmt.setInt(2, userId);
+                
+                stmt.executeUpdate();
+                System.out.println("This was your first time playing the song!");
+            }
+    	} catch(SQLException e) {
+    		System.out.println("Error retrieving songs by artist: " + e.getMessage());
+            throw e;
+    	}        
+    }
+    
+    public int getMonthlyListenersForArtist(int artistId, int month) throws SQLException {
+    	Connection conn = DBConnection.getConnection();
+    	int monthlyListeners = 0;
+    	try {
+    		PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(DISTINCT P.UserID) AS MonthlyListeners FROM Playbacks P INNER JOIN Collaborated C ON P.MediaID = C.MediaID WHERE P.MediaID IN (SELECT DISTINCT C.MediaID FROM Collaborated WHERE C.ArtistID = ?) AND MONTH(P.PlayedAt) = ?");
+    		stmt.setInt(1, artistId);
+    		stmt.setInt(2, month);
+    		ResultSet rs = stmt.executeQuery();
+    		
+    		if(rs.next()) {
+    			monthlyListeners = rs.getInt("MonthlyListeners");
+    		}
+    		
+    	}catch(SQLException e) {
+    		System.out.println("Error retrieving songs by artist: " + e.getMessage());
+            throw e;
+    	}     
+		return monthlyListeners;
+	}
+
 
 
 }
