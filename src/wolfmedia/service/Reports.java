@@ -1,6 +1,9 @@
 package wolfmedia.service;
 
+import java.sql.SQLException;
 import java.util.Scanner;
+
+import wolfmedia.api.InformationProcessing.SongDao;
 
 public class Reports {
     private Scanner scanner;
@@ -42,6 +45,7 @@ public class Reports {
             // Get user input
             int option = scanner.nextInt();
             // Handle user input
+            SongDao songDao = null;
             switch (option) {
                 case 1:
                     System.out.println("Not Impleented");
@@ -50,7 +54,21 @@ public class Reports {
                     System.out.println("Not Impleented");
                     break;
                 case 3:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the artist id: ");
+                	int artistId = scanner.nextInt();
+
+                	System.out.print("Enter the month (1-12): ");
+                	int month = scanner.nextInt();
+
+                	try {
+                	    songDao = new SongDao();
+                	    int monthlyListeners = songDao.getMonthlyListenersForArtist(artistId, month);
+                	    
+                	    System.out.println("Monthly listeners for artist " + artistId + " in month " + month + ": " + monthlyListeners);
+                	} catch (SQLException e) {
+                	    System.out.println("Error getting monthly listeners: " + e.getMessage());
+                	}
+
                     break;
                 case 4:
                     System.out.println("Not Impleented");

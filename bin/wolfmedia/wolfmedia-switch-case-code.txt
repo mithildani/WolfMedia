@@ -1,0 +1,20 @@
+            	System.out.print("Enter the episode media ID: ");
+            	int mediaId = scanner.nextInt();
+            	scanner.nextLine(); 
+            	
+            	System.out.print("Enter the podcast ID: ");
+            	int podcastId = scanner.nextInt();
+            	scanner.nextLine(); 
+            	
+            	try {
+            		PodcastEpisodeDao podcastEpisodeDao = new PodcastEpisodeDao();
+            		int rowsUpdated = podcastEpisodeDao.assignPodcastEpisodeToPodcast(mediaId, podcastId);
+
+            		if (rowsUpdated == 1) {
+            		    System.out.println("Podcast episode assigned to podcast successfully.");
+            		} else {
+            		    System.out.println("Podcast episode or podcast not found.");
+            		}
+            	}catch (SQLException e) {
+            		System.out.println("Error assigning podcast episode to podcast: " + e.getMessage());
+            	}

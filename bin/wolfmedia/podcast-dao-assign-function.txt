@@ -1,0 +1,13 @@
+public int assignPodcastEpisodeToPodcast(int episodeMediaId, int podcastId) {
+    String sql = "UPDATE aachava2.PodcastEpisode SET PodcastID = ? WHERE MediaID = ?";
+    Connection conn = DBConnection.getConnection();
+    try (
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, podcastId);
+        ps.setInt(2, episodeMediaId);
+        return ps.executeUpdate();
+    } catch (SQLException e) {
+        System.err.println("Error assigning episode to podcast: " + e.getMessage());
+        return 0;
+    }
+}

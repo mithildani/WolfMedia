@@ -21,10 +21,9 @@ public class MaintainingMetadata {
         System.out.println("");
         System.out.println("Please select an option:");
         System.out.println("");
-        System.out.println("1. enter Song PlayCount");
-        System.out.println("2. update Song PlayCount");
+        System.out.println("1. enter/update Song PlayCount");
         System.out.println("");
-        System.out.println("3. enter Monthly Artist Listener Count");
+        System.out.println("2. enter Monthly Artist Listener Count");
         System.out.println("4. update Monthly Artist Listener Count");
         System.out.println("");
         System.out.println("5. enter Podcast Subscriber");
@@ -54,7 +53,20 @@ public class MaintainingMetadata {
             SongDao songDao = null;
             switch (option) {
                 case 1:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the user id: ");
+                    int userId = scanner.nextInt();
+                    System.out.print("Enter the media id: ");
+                    int mediaId = scanner.nextInt();
+                    try {
+                        songDao = new SongDao();
+                        songDao.simulateSongPlayback(userId, mediaId);
+                        
+                        System.out.println("Song playback simulated successfully!");
+                    } catch (SQLException e) {
+                        System.out.println("Error simulating song playback: " + e.getMessage());
+                    }
+                    
+                    
                     break;
                 case 2:
                     System.out.println("Not Impleented");
