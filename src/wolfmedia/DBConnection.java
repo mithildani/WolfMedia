@@ -9,9 +9,9 @@ public class DBConnection {
   
     static
     {
-        String url = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/mdani";
-        String user = "mdani";
-        String password = "200476448";
+        String url = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/aachava2";
+        String user = "aachava2";
+        String password = "200477490";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {

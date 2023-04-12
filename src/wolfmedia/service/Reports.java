@@ -48,10 +48,37 @@ public class Reports {
             SongDao songDao = null;
             switch (option) {
                 case 1:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the media id: ");
+                	int mediaId = scanner.nextInt();
+
+                	System.out.print("Enter the month (1-12): ");
+                	int sMonth = scanner.nextInt();
+
+                	try {
+                	    songDao = new SongDao();
+                	    
+                	    int songListeners = songDao.getMonthlySongPlayCount(mediaId, sMonth);
+                	    
+                	    System.out.println("Monthly listeners for song " + mediaId + " in month " + sMonth + ": " + songListeners);
+                	} catch (SQLException e) {
+                	    System.out.println("Error getting monthly listeners: " + e.getMessage());
+                	}
                     break;
                 case 2:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the album id: ");
+                	int albumId = scanner.nextInt();
+
+                	System.out.print("Enter the month (1-12): ");
+                	int amonth = scanner.nextInt();
+
+                	try {
+                	    songDao = new SongDao();
+                	    int albumListeners = songDao.getMonthlyListenersForArtist(albumId, amonth);
+                	    
+                	    System.out.println("Monthly listeners for album " + albumId + " in month " + amonth + ": " + albumListeners);
+                	} catch (SQLException e) {
+                	    System.out.println("Error getting monthly listeners: " + e.getMessage());
+                	}
                     break;
                 case 3:
                 	System.out.print("Enter the artist id: ");
