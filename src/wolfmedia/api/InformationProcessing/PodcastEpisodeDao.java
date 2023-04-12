@@ -128,6 +128,41 @@ public class PodcastEpisodeDao {
 	    return episodeTitles;
 	}
 
+	public void subscribeToPodcast(int podcastId, int userId) throws SQLException {
+	    Connection conn = DBConnection.getConnection();
+	    try {
+	        PreparedStatement stmt = conn.prepareStatement("INSERT INTO SubscribePodcast (PodcastID, UserID) VALUES (?, ?)");
+	        stmt.setInt(1, podcastId);
+	        stmt.setInt(2, userId);
+	        stmt.executeUpdate();
+	        
+	        
+	    } catch (SQLException e) {
+	        System.out.println("Error subscribing to podcast: " + e.getMessage());
+	        throw e;
+	    }
+	}
+	
+	public void updatePodcastSubscription(int userId, int npodcastId, int opodcastId) throws SQLException {
+	    Connection conn = DBConnection.getConnection();
+	    try {
+	        PreparedStatement stmt = conn.prepareStatement("UPDATE SubscribePodcast SET PodcastID = ? WHERE UserID = ? and PodcastID = ?");
+	        
+	        stmt.setInt(1, npodcastId);
+	        stmt.setInt(2, userId);
+	        stmt.setInt(3, opodcastId);
+	        int rowsAffected = stmt.executeUpdate();
+	        if (rowsAffected == 0) {
+	            System.out.println("No subscription found for user " + userId + " and podcast " + opodcastId);
+	        } else {
+	            System.out.println("Subscription updated successfully for user " + userId + " and podcast " + npodcastId);
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error updating podcast subscription: " + e.getMessage());
+	        throw e;
+	    }
+	}
+
 
 }
 
