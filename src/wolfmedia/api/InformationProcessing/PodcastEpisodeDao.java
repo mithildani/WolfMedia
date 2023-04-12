@@ -167,7 +167,7 @@ public class PodcastEpisodeDao {
 	public void ratePodcast(int userId, int podcastId, int rating) throws SQLException {
 	    Connection conn = DBConnection.getConnection();
 	    try {
-	        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Rating (UserID, PodcastID, Rating, UpdatedAt) VALUES (?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE Rating = VALUES(Rating), UpdatedAt = NOW()");
+	        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Rating (UserID, PodcastID, Rating, UpdatedAt) VALUES (?, ?, ?, CURDATE()) ON DUPLICATE KEY UPDATE Rating = VALUES(Rating), UpdatedAt = CURDATE()");
 	        stmt.setInt(1, userId);
 	        stmt.setInt(2, podcastId);
 	        stmt.setInt(3, rating);
