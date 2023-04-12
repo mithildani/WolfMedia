@@ -1,9 +1,13 @@
 package wolfmedia.service;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
+import wolfmedia.api.InformationProcessing.PaymentDao;
 import wolfmedia.api.InformationProcessing.SongDao;
+import wolfmedia.model.Song;
 
 public class Reports {
     private Scanner scanner;
@@ -46,6 +50,7 @@ public class Reports {
             int option = scanner.nextInt();
             // Handle user input
             SongDao songDao = null;
+            PaymentDao paymentDao = null;
             switch (option) {
                 case 1:
                 	System.out.print("Enter the media id: ");
@@ -107,16 +112,64 @@ public class Reports {
                     System.out.println("Not Impleented");
                     break;
                 case 7:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the year(YYYY): ");
+                	int year = scanner.nextInt();
+
+                	System.out.print("Enter the month (1-12): ");
+                	int pmonth = scanner.nextInt();
+
+                	try {
+                	    paymentDao = new PaymentDao();
+                	    double monthlyPayemnt = paymentDao.getTotalMonthlyPayment(year, pmonth);
+                	    
+                	    System.out.println("Total revenue in month " + pmonth + " for year " + year + " is " + monthlyPayemnt);
+                	} catch (SQLException e) {
+                	    System.out.println("Error getting monthly revenue: " + e.getMessage());
+                	}
                     break;
                 case 8:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the year(YYYY): ");
+                	int pyear = scanner.nextInt();
+
+                	
+                	try {
+                	    paymentDao = new PaymentDao();
+                	    double yearlyRevenue = paymentDao.getTotalYearlyRevenue(pyear);
+                	    
+                	    System.out.println("Total yearly revenue in year " + pyear + " is " + yearlyRevenue);
+                	} catch (SQLException e) {
+                	    System.out.println("Error getting yearly revenue: " + e.getMessage());
+                	}
                     break;
                 case 9:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the artist id: ");
+                	int arId = scanner.nextInt();
+                	try {
+                		songDao = new SongDao();
+                		List<String> titles = songDao.getSongTitlesByArtist(arId);
+                		System.out.println("Following are the song by artist with id: " + arId);
+                        for (String title : titles) {
+                            System.out.println(title);
+                        }
+                	}catch (SQLException e) {
+                	    System.out.println("Error getting song by artist: " + e.getMessage());
+                	}
+                    
+              
                     break;
                 case 10:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the album id: ");
+                	int albId = scanner.nextInt();
+                	try {
+                		songDao = new SongDao();
+                		List<String> titles = songDao.getSongByAlbum(albId);
+                		System.out.println("Following are the song with album id: " + albId);
+                        for (String title : titles) {
+                            System.out.println(title);
+                        }
+                	}catch (SQLException e) {
+                	    System.out.println("Error getting song by album: " + e.getMessage());
+                	}
                     break;
                 case 11:
                     System.out.println("Not Impleented");

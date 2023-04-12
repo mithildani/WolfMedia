@@ -301,5 +301,42 @@ public class SongDao {
 		return monthlyCount;
 	}
 
+    public List<String> getSongTitlesByArtist(int artistId) throws SQLException {
+        Connection conn = DBConnection.getConnection();
+        List<String> songTitles = new ArrayList<>();
+        try {
+            PreparedStatement stmt = conn.prepareStatement("select Title from Song s inner join Collaborated C on s.MediaID = C.MediaID where ArtistID = ?");
+            stmt.setInt(1, artistId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                songTitles.add(rs.getString("Title"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error retrieving song titles by artist: " + e.getMessage());
+            throw e;
+        }
+        return songTitles;
+    }
+    
+    public List<String> getSongByAlbum(int albumId) throws SQLException {
+        Connection conn = DBConnection.getConnection();
+        List<String> songTitles = new ArrayList<>();
+        try {
+            PreparedStatement stmt = conn.prepareStatement("select * from Song where AlbumID = ?");
+            stmt.setInt(1, albumId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                songTitles.add(rs.getString("Title"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error retrieving song titles by artist: " + e.getMessage());
+            throw e;
+        }
+        return songTitles;
+    }
 
 }
