@@ -106,6 +106,29 @@ public class PodcastEpisodeDao {
             throw e;
         }
     }
+	
+	public List<String> getPodcastEpisodeTitles(int podcastId) throws SQLException {
+	    Connection conn = DBConnection.getConnection();
+	    List<String> episodeTitles = new ArrayList<>();
+
+	    try {
+	        PreparedStatement stmt = conn.prepareStatement("SELECT Title FROM PodcastEpisode WHERE PodcastID = ?");
+	        stmt.setInt(1, podcastId);
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            String title = rs.getString("Title");
+	            episodeTitles.add(title);
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error retrieving podcast episode titles: " + e.getMessage());
+	        throw e;
+	    }
+
+	    return episodeTitles;
+	}
+
+
 }
 
 	
