@@ -257,6 +257,49 @@ public class SongDao {
 		return monthlyListeners;
 	}
 
+    public int getMonthlySongPlayCount(int mediaId, int month) throws SQLException {
+    	
+    	Connection conn = DBConnection.getConnection();
+    	int monthlyListeners = 0;
+    	try {
+//    		String query = "SELECT SUM(Count) AS MonthlyCount FROM Playbacks WHERE MONTH(PlayedAt) =" +month+ " AND MediaID =" + mediaId;
+//    		System.out.println(query);
+    		PreparedStatement stmt = conn.prepareStatement("SELECT SUM(Count) AS ml FROM Playbacks WHERE MONTH(PlayedAt) = ? AND MediaID = ?");
+    		
+    		stmt.setInt(1, month);
+    		stmt.setInt(2, mediaId);
+    		ResultSet rs = stmt.executeQuery();
+    		
+    		if(rs.next()) {
+    			monthlyListeners = rs.getInt("ml");
+    		}
+    		
+    	}catch(SQLException e) {
+    		System.out.println("Error retrieving song play count by month: " + e.getMessage());
+            throw e;
+    	}     
+		return monthlyListeners;
+	}	
+    
+    public int getMonthlyAlbumPlayCount(int albumId, int month) throws SQLException {
+    	Connection conn = DBConnection.getConnection();
+    	int monthlyCount = 0;
+    	try {
+    		PreparedStatement stmt = conn.prepareStatement("select SUM(Count) as MonthlyCount from Playbacks where MediaID in (select MediaID from Song where AlbumID = ?) and month(PlayedAt) = ?");
+    		stmt.setInt(1, albumId);
+    		stmt.setInt(2, month);
+    		ResultSet rs = stmt.executeQuery();
+    		
+    		if(rs.next()) {
+    			monthlyCount = rs.getInt("MonthlyCount");
+    		}
+    		
+    	}catch(SQLException e) {
+    		System.out.println("Error retrieving monthly playcount of album: " + e.getMessage());
+            throw e;
+    	}     
+		return monthlyCount;
+	}
 
 
 }
