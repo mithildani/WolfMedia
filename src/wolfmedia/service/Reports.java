@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import wolfmedia.api.InformationProcessing.PaymentDao;
+import wolfmedia.api.InformationProcessing.PodcastEpisodeDao;
 import wolfmedia.api.InformationProcessing.SongDao;
 import wolfmedia.model.Song;
 
@@ -51,6 +52,7 @@ public class Reports {
             // Handle user input
             SongDao songDao = null;
             PaymentDao paymentDao = null;
+            PodcastEpisodeDao podcastEpisodeDao = null;
             switch (option) {
                 case 1:
                 	System.out.print("Enter the media id: ");
@@ -172,7 +174,18 @@ public class Reports {
                 	}
                     break;
                 case 11:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the podcast  id: ");
+                	int podId = scanner.nextInt();
+                	try {
+                		podcastEpisodeDao = new PodcastEpisodeDao();
+                		List<String> titles = podcastEpisodeDao.getPodcastEpisodeTitles(podId);
+                		System.out.println("Following are the episodes in podcast with id: " + podId);
+                        for (String title : titles) {
+                            System.out.println(title);
+                        }
+                	}catch (SQLException e) {
+                	    System.out.println("Error getting podcast episode titles by podcast id: " + e.getMessage());
+                	}
                     break;
                 case 0:
                     return;
