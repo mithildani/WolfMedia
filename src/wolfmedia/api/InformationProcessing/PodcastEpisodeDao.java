@@ -73,7 +73,9 @@ public class PodcastEpisodeDao {
             statement.setString(5,releasedate);
 			statement.setInt(6, mediaId);
             return statement.executeUpdate();
-        }
+        }catch (SQLException e) {
+			throw e;
+		}
     }
 	
 	public int deletePodcastEpisode(int peMediaId) throws SQLException{
@@ -162,6 +164,34 @@ public class PodcastEpisodeDao {
 	        throw e;
 	    }
 	}
+	public void ratePodcast(int userId, int podcastId, int rating) throws SQLException {
+	    Connection conn = DBConnection.getConnection();
+	    try {
+	        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Rating (UserID, PodcastID, Rating, UpdatedAt) VALUES (?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE Rating = VALUES(Rating), UpdatedAt = NOW()");
+	        stmt.setInt(1, userId);
+	        stmt.setInt(2, podcastId);
+	        stmt.setInt(3, rating);
+	        stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        System.out.println("Error entering rating: " + e.getMessage());
+	        throw e;
+	    }
+	}
+	
+	public void insertPodcastEpisodeStream(int mediaId, int userId) throws SQLException {
+	    Connection conn = DBConnection.getConnection();
+	    try {
+	        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Streams (MediaID, UserID, StreamedAt) VALUES (?, ?, CURDATE()) ON DUPLICATE KEY UPDATE Count = Count + 1");
+	        stmt.setInt(1, mediaId);
+	        stmt.setInt(2, userId);
+	        stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        System.out.println("Error inserting podcast episode stream: " + e.getMessage());
+	        throw e;
+	    } 
+	}
+
+
 
 
 }
