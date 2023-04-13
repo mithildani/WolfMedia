@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class SongDao {
     public SongDao() {}
 
     public Song getSongById(int mediaId) {
-        String sql = "SELECT * FROM aachava2.Song WHERE MediaID = ?";
+        String sql = "SELECT * FROM Song WHERE MediaID = ?";
         Song song = null;
         Connection connection = DBConnection.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -25,7 +26,7 @@ public class SongDao {
             if (rs.next()) {
                 song = new Song();
                 song.setMediaId(rs.getInt("MediaID"));
-                song.setReleaseDate(rs.getDate("ReleaseDate"));
+                song.setReleaseDate(rs.getString("ReleaseDate"));
                 song.setDuration(rs.getTime("Duration"));
                 song.setTitle(rs.getString("Title"));
                 song.setRoyaltyRate(rs.getDouble("RoyaltyRate"));
@@ -41,7 +42,7 @@ public class SongDao {
     }
 
     public List<Song> getAllSongs() {
-        String sql = "SELECT * FROM aachava2.Song";
+        String sql = "SELECT * FROM Song";
         List<Song> songs = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
         try (Statement stmt = connection.createStatement()) {
@@ -49,7 +50,7 @@ public class SongDao {
             while (rs.next()) {
                 Song song = new Song();
                 song.setMediaId(rs.getInt("MediaID"));
-                song.setReleaseDate(rs.getDate("ReleaseDate"));
+                song.setReleaseDate(rs.getString("ReleaseDate"));
                 song.setDuration(rs.getTime("Duration"));
                 song.setTitle(rs.getString("Title"));
                 song.setRoyaltyRate(rs.getDouble("RoyaltyRate"));
@@ -65,59 +66,65 @@ public class SongDao {
         return songs;
     }
 
-    public int updateSong(int mediaId, String title, String country, String language) throws SQLException {
-        String sql = "UPDATE Song SET Title = ?, Country = ?, Language = ? WHERE MediaID = ?";
+    public int updateSong(int mediaId, String title, String country, String language, Time duration, String releasedate, double royaltyrate, int tracknumber) throws SQLException {
+        String sql = "UPDATE Song SET Title = ?, Country = ?, Language = ?, Duration = ?, ReleaseDate = ?, RoyaltyRate = ?, TrackNumber = ? WHERE MediaID = ?";
         Connection connection = DBConnection.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, title);
             statement.setString(2, country);
             statement.setString(3, language);
-            statement.setInt(4, mediaId);
+            statement.setTime(4, duration);
+            statement.setString(5, releasedate);
+            statement.setDouble(6, royaltyrate);
+            statement.setInt(7, tracknumber);
+            statement.setInt(8, mediaId);
             return statement.executeUpdate();
         }
     }
 
-    // public boolean deleteSong(int mediaId) throws SQLException {
-    // String sql = "DELETE FROM Song WHERE MediaID = ?";
-    // PreparedStatement statement = connection.prepareStatement(sql);
-    // statement.setInt(1, mediaId);
-    //
-    // int rowsDeleted = statement.executeUpdate();
-    //
-    // return rowsDeleted > 0;
-    // }
+     public int deleteSong(int mediaId) throws SQLException {
+     String sql = "DELETE FROM Media WHERE MediaID = ?";
+     Connection connection = DBConnection.getConnection();
+     PreparedStatement statement = connection.prepareStatement(sql);
+     statement.setInt(1, mediaId);  
+     int rowsDeleted = statement.executeUpdate();    
+     return rowsDeleted;
+     }
 
-    public boolean insertSong(Song song) throws SQLException {
+    public boolean insertSong(int mediaid, Time duration,String title,double royaltyrate,String country,String
+            language,int albumid,int tracknumber,String releasedate) throws SQLException {
         // Check if album exists
-        String albumSql = "SELECT * FROM aachava2.Album WHERE AlbumID = ?";
-        Connection connection = DBConnection.getConnection();
-        try (PreparedStatement albumStmt = connection.prepareStatement(albumSql)) {
-            albumStmt.setInt(1, song.getAlbumId());
-            ResultSet albumRs = albumStmt.executeQuery();
-            if (!albumRs.next()) {
-                // Album does not exist
-                return false;
-            } else {
-                // check if artist exists, if not create one
-            }
-        }
+//        String albumSql = "SELECT * FROM Album WHERE AlbumID = ?";
+//        Connection connection = DBConnection.getConnection();
+//        try (PreparedStatement albumStmt = connection.prepareStatement(albumSql)) {
+//            albumStmt.setInt(1, song.getAlbumId());
+//            ResultSet albumRs = albumStmt.executeQuery();
+//            if (!albumRs.next()) {
+//                // Album does not exist
+//                return false;
+//            } else {
+//                // check if album exists, if not create one
+//            }
+//        }
 
         // Check if artist exists
 
         // Insert song
-        String songSql = "INSERT INTO aachava2.Song " +
-                "(MediaID, ReleaseDate, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber) " +
-                "VALUES (?, CURDATE(), ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement songStmt = connection.prepareStatement(songSql)) {
-            songStmt.setInt(1, song.getMediaId());
-            // songStmt.setDate(2, song.getReleaseDate());
-            songStmt.setTime(2, song.getDuration());
-            songStmt.setString(3, song.getTitle());
-            songStmt.setDouble(4, song.getRoyaltyRate());
-            songStmt.setString(5, song.getCountry());
-            songStmt.setString(6, song.getLanguage());
-            songStmt.setInt(7, song.getAlbumId());
-            songStmt.setInt(8, song.getTrackNumber());
+    	System.out.println("KAKAKAKA" + duration);
+        String songSql = "INSERT INTO Song " +
+                "(MediaID, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber, ReleaseDate) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection connection = DBConnection.getConnection();
+		try (PreparedStatement songStmt = connection.prepareStatement(songSql)) {
+            songStmt.setInt(1, mediaid);
+            songStmt.setTime(2, duration);
+            songStmt.setString(3, title);
+            songStmt.setDouble(4, royaltyrate);
+            songStmt.setString(5, country);
+            songStmt.setString(6, language);
+            songStmt.setInt(7, albumid);
+            songStmt.setInt(8, tracknumber);
+            songStmt.setString(9, releasedate);
 
             int rowsAffected = songStmt.executeUpdate();
             return (rowsAffected == 1);
@@ -155,7 +162,7 @@ public class SongDao {
                 while (rs.next()) {
                     Song song = new Song();
                     song.setMediaId(rs.getInt("MediaID"));
-                    song.setReleaseDate(rs.getDate("ReleaseDate"));
+                    song.setReleaseDate(rs.getString("ReleaseDate"));
                     song.setDuration(rs.getTime("Duration"));
                     song.setTitle(rs.getString("Title"));
                     song.setRoyaltyRate(rs.getDouble("RoyaltyRate"));
@@ -184,7 +191,7 @@ public class SongDao {
                 while (rs.next()) {
                     Song song = new Song();
                     song.setMediaId(rs.getInt("MediaID"));
-                    song.setReleaseDate(rs.getDate("ReleaseDate"));
+                    song.setReleaseDate(rs.getString("ReleaseDate"));
                     song.setDuration(rs.getTime("Duration"));
                     song.setTitle(rs.getString("Title"));
                     song.setRoyaltyRate(rs.getDouble("RoyaltyRate"));
@@ -206,7 +213,7 @@ public class SongDao {
     	Connection conn = DBConnection.getConnection();
     	try {
     		// Check if there is an existing playback record for this user and song on the current day
-            PreparedStatement stmt = conn.prepareStatement("SELECT Count FROM aachava2.Playbacks WHERE UserID = ? AND MediaID = ? AND MONTH(PlayedAt) = MONTH(CURDATE())");
+            PreparedStatement stmt = conn.prepareStatement("SELECT Count FROM Playbacks WHERE UserID = ? AND MediaID = ? AND MONTH(PlayedAt) = MONTH(CURDATE())");
             stmt.setInt(1, userId);
             stmt.setInt(2, mediaId);
             
@@ -215,7 +222,7 @@ public class SongDao {
             if (rs.next()) {
                 // If there is an existing record, increment the playcount
                 int playCount = rs.getInt("Count") + 1;
-                stmt = conn.prepareStatement("UPDATE aachava2.Playbacks SET Count = ? WHERE UserID = ? AND MediaID = ? AND PlayedAt = CURDATE()");
+                stmt = conn.prepareStatement("UPDATE Playbacks SET Count = ? WHERE UserID = ? AND MediaID = ? AND PlayedAt = CURDATE()");
                 stmt.setInt(1, playCount);
                 stmt.setInt(2, userId);
                 stmt.setInt(3, mediaId);
@@ -224,7 +231,7 @@ public class SongDao {
                 System.out.println("You have played this song " + playCount + " times now!");
             } else {
                 // If there is no existing record, create a new playback record with playcount 1
-                stmt = conn.prepareStatement("INSERT INTO aachava2.Playbacks (MediaID, UserID, PlayedAt, Count) VALUES (?, ?, CURDATE(), 1)");
+                stmt = conn.prepareStatement("INSERT INTO Playbacks (MediaID, UserID, PlayedAt, Count) VALUES (?, ?, CURDATE(), 1)");
                 stmt.setInt(1, mediaId);
                 stmt.setInt(2, userId);
                 

@@ -4,7 +4,7 @@ import java.sql.Time;
 
 public class Song {
     private int mediaId;
-    private Date releaseDate;
+    private String releaseDate;
     private Time duration;
     private String title;
     private double royaltyRate;
@@ -13,12 +13,11 @@ public class Song {
     private int albumId;
     private int trackNumber;
     
-    public Song() {
+    public Song(int songMediaId, Time duration2, String songTitle, double songRoyaltyRate, String songCountry, String songLanguage, int songAlbumID, int songTrackNumber, String songreleasedateStr) {
 
     }
     
-    public Song(int mediaId, Time duration, String title, double royaltyRate, String country,
-			String language, int albumId, int trackNumber) {
+    public Song() {
 		super();
 		this.mediaId = mediaId;
 //		this.releaseDate = releaseDate;
@@ -39,11 +38,11 @@ public class Song {
         this.mediaId = mediaId;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 

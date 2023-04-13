@@ -115,12 +115,38 @@ public class InformationProcessing {
                     double songRoyaltyRate = scanner.nextDouble();
                     System.out.print("Enter album ID: ");
                     int songAlbumID = scanner.nextInt();
-
-                    Song newSong = new Song(songMediaId, duration, songTitle, songRoyaltyRate, songCountry,
-                            songLanguage, songAlbumID, songTrackNumber);
+                    
+                    System.out.println("Enter Release Date (yyyy-mm-dd): ");
+                	String songreleasedateStr = scanner.next();
+                    if (scanner.hasNextLine()) {
+                    	                        	
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                        java.util.Date songreleaseDate = null;
+                        try {
+                        	System.out.println(songreleaseDate);
+                        	System.out.println(songreleasedateStr);
+                            songreleaseDate = dateFormat.parse(songreleasedateStr);
+                        } catch (Exception e) {
+                            System.out.println("Invalid Date format. Please try again.");
+                            return;
+                        }
+                    } else {
+                        System.out.println("No input available");
+                        return;
+                    }
+                    
+                    String sql = "INSERT INTO Media (MediaID) " + "VALUES (?)";
+    				Connection connection = DBConnection.getConnection();
+    				try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+    					stmt.setInt(1, songMediaId);
+    					stmt.executeQuery();
+    		        } catch (SQLException e) {
+    		            throw e;
+    		        }
                     try {
                     	songDao = new SongDao();
-                        boolean insertedSong = songDao.insertSong(newSong);
+                        boolean insertedSong = songDao.insertSong(songMediaId, duration, songTitle, songRoyaltyRate, songCountry,
+                                songLanguage, songAlbumID, songTrackNumber, songreleasedateStr);
                         if (insertedSong) {
                             System.out.println("Song added successfully with Media ID " + songMediaId);
                         } else {
@@ -133,17 +159,58 @@ public class InformationProcessing {
                 case 2:
                 	
                     System.out.print("Enter media id of song to update: ");
-                    int updatedMediaId = scanner.nextInt();
+                    int updatesongmediaid = scanner.nextInt();
                     scanner.nextLine(); // consume newline character
                     System.out.print("Enter new title: ");
-                    String title = scanner.nextLine();
+                    String updatesongtitle = scanner.nextLine();
                     System.out.print("Enter new country: ");
-                    String country = scanner.nextLine();
+                    String updatesongcountry = scanner.nextLine();
                     System.out.print("Enter new language: ");
-                    String language = scanner.nextLine();
+                    String updatesonglanguage = scanner.nextLine();
+                    System.out.println("Enter new Royalty rate : ");
+                    double updatesongroyaltyrate = scanner.nextDouble();
+                    System.out.println("Enter new  Track number : ");
+                    int updatesongtracknumber = scanner.nextInt();
+                    System.out.println("Enter new duration (hh:mm:ss): ");
+                	scanner.nextLine();
+                    Time updatesongduration = null;
+                    if (scanner.hasNextLine()) {
+                        String updatesongdurationStr = scanner.nextLine();
+
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                            java.util.Date date = sdf.parse(updatesongdurationStr);
+                            updatesongduration = new Time(date.getTime());
+                        } catch (Exception e) {
+                            System.out.println("Invalid time format. Please try again.");
+                            return;
+                        }
+                    } else {
+                        System.out.println("No input available");
+                        return;
+                    }
+                    System.out.println("Enter new Release Date (yyyy-mm-dd): ");
+                	String updatesongreleasedateStr = scanner.next();
+                    if (scanner.hasNextLine()) {
+                    	                        	
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+                        java.util.Date updatesongreleaseDate = null;
+                        try {
+                        	System.out.println(updatesongreleaseDate);
+                        	System.out.println(updatesongreleasedateStr);
+                            updatesongreleaseDate = dateFormat.parse(updatesongreleasedateStr);
+                        } catch (Exception e) {
+                            System.out.println("Invalid Date format. Please try again.");
+                            return;
+                        }
+                    } else {
+                        System.out.println("No input available");
+                        return;
+                    }
+                    
                     try {
                     	songDao = new SongDao();
-                        int rowsUpdated = songDao.updateSong(updatedMediaId, title, country, language);
+                        int rowsUpdated = songDao.updateSong(updatesongmediaid, updatesongtitle, updatesongcountry, updatesonglanguage, updatesongduration, updatesongreleasedateStr, updatesongroyaltyrate, updatesongtracknumber);
                         if (rowsUpdated == 1) {
                             System.out.println("Song updated successfully.");
                         } else {
@@ -156,23 +223,22 @@ public class InformationProcessing {
                     break;
                 case 3:
 
-                    // System.out.print("Enter MediaID: ");
-                    // int mediaIdToDelete = scanner.nextInt();
-                    //
-                    // try {
-                	//songDao = new SongDao();
-                    // boolean deleteResult = dao.deleteSong(mediaIdToDelete);
-                    // if (deleteResult) {
-                    // System.out.println("Song deleted successfully");
-                    // } else {
-                    // System.out.println("Failed to delete song");
-                    // }
-                    // break;
-                    // } catch (SQLException e) {
-                    // // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                    // }
-                    System.out.println("Not Impleented");
+                     System.out.print("Enter MediaID od Song to be deleted : ");
+                     int deletesongmediaid = scanner.nextInt();
+                    
+                 	try {
+                 		songDao = new SongDao();
+                 		int deletedSong = songDao.deleteSong(deletesongmediaid);
+                 		if (deletedSong == 1) {
+                 			System.out.println("Song deleted successfully");
+                 		}
+                 		else {
+                 			System.out.println("Song deletion failed");
+                 		}
+                 	}
+                 		catch (SQLException e) {
+                 			System.out.println("Error deleting Song : " + e.getMessage());
+                 		}
                     break; 
                 case 4:
                 	
@@ -239,8 +305,25 @@ public class InformationProcessing {
                     
                     break;
                 case 6:
-                    System.out.println("Not Impleented");
+                	// Delete an artist
+                	System.out.print("Enter ArtistID of Artist to be deleted : ");
+                    int deleteartistid= scanner.nextInt();
+                   
+                	try {
+                		artistDao = new ArtistDao();
+                		int deletedArtist = artistDao.deleteArtist(deleteartistid);
+                		if (deletedArtist == 1) {
+                			System.out.println("Artist deleted successfully");
+                		}
+                		else {
+                			System.out.println("Artist deletion failed");
+                		}
+                	}
+                		catch (SQLException e) {
+                			System.out.println("Error deleting Artist : " + e.getMessage());
+                		}                    
                     break;
+                    
                 case 7:
                 	// Add a new host
                 	System.out.print("Enter Host ID: ");
@@ -306,8 +389,25 @@ public class InformationProcessing {
                 	}
                     break;
                 case 9:
-                    System.out.println("Not Impleented");
+                	// Delete Host
+                	System.out.print("Enter HostID of Host to be deleted : ");
+                    int deletehostid= scanner.nextInt();
+                   
+                	try {
+                		hostDao = new PodcastHostDao();
+                		int deletedHost = hostDao.deletePodcastHost(deletehostid);
+                		if (deletedHost == 1) {
+                			System.out.println("Podcast Host deleted successfully");
+                		}
+                		else {
+                			System.out.println("Podcast Host deletion failed");
+                		}
+                	}
+                	catch (SQLException e) {
+                			System.out.println("Error deleting Podcast Host : " + e.getMessage());
+                	}                    
                     break;
+                    
                 case 10:
                 	// Add PodCast episode
                 	System.out.println("Enter the Media ID : ");
@@ -364,9 +464,9 @@ public class InformationProcessing {
                     }
                 	
 				String pereleasedate = null;				
-				String sql = "INSERT INTO Media (MediaID) " + "VALUES (?)";
-				Connection connection = DBConnection.getConnection();
-				try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+				sql = "INSERT INTO Media (MediaID) " + "VALUES (?)";
+				Connection connection1 = DBConnection.getConnection();
+				try (PreparedStatement stmt = connection1.prepareStatement(sql)) {
 					stmt.setInt(1, peMediaId);
 					stmt.executeQuery();
 		        } catch (SQLException e) {
@@ -398,7 +498,7 @@ public class InformationProcessing {
                 	double updatepeadrate = scanner.nextDouble();
                 	System.out.println("Enter new Flat Fee : ");
                 	double updatepeflatfee = scanner.nextDouble();
-                	System.out.println("Enter duration (hh:mm:ss): ");
+                	System.out.println("Enter new duration (hh:mm:ss): ");
                 	scanner.nextLine();
                     Time updatepeduration = null;
                     if (scanner.hasNextLine()) {
@@ -417,7 +517,7 @@ public class InformationProcessing {
                         return;
                     }
                     
-                    System.out.println("Enter Release Date (yyyy-mm-dd): ");
+                    System.out.println("Enter new Release Date (yyyy-mm-dd): ");
                 	String updatepereleasedateStr = scanner.next();
                     if (scanner.hasNextLine()) {
                     	                        	
@@ -539,6 +639,25 @@ public class InformationProcessing {
                 	}
                     break;
                 case 16:
+                	//assign podcast episode to podcast
+                	
+                	System.out.println("Enter the mediaID odf the podcastepisode :");
+                	int ppemediaid = scanner.nextInt();
+                	System.out.println("Enter the podcastID : ");
+                	int ppepodcastid = scanner.nextInt();
+                	try {
+                		peDao= new PodcastEpisodeDao();
+                		int rowsUpdated = peDao.assignPodcastEpisodetoPodcast(ppemediaid,ppepodcastid);
+                		if (rowsUpdated == 1) {
+                			System.out.println("Podcast Episode was successfully assigned to Podcast");
+                		}
+                		else {
+                			System.out.println("Error assigning podcast episode to podcast");
+                		}
+                	}
+                	catch(SQLException e){
+                		System.out.println("Error assigning podcast episode to podcast: " + e.getMessage());
+                	}
                     System.out.println("Not Impleented");
                     break;
                 case 17:
