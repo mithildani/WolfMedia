@@ -108,6 +108,20 @@ public class PodcastEpisodeDao {
             throw e;
         }
     }
+
+	public int assignPodcastEpisodetoPodcast(int ppemediaid, int ppepodcastid) throws SQLException {
+		String sql = "UPDATE PodcastEpisode SET PodcastID = ? WHERE MediaID = ?";
+		Connection connection = DBConnection.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        	stmt.setInt(1, ppepodcastid);
+            stmt.setInt(2, ppemediaid);
+            int rowsAffected = stmt.executeUpdate();
+            return (rowsAffected);
+        }
+        catch (SQLException e) {
+            throw e;
+        }
+	}
 	
 	public List<String> getPodcastEpisodeTitles(int podcastId) throws SQLException {
 	    Connection conn = DBConnection.getConnection();
@@ -190,10 +204,11 @@ public class PodcastEpisodeDao {
 	        throw e;
 	    } 
 	}
-
-
-
-
 }
+	
+
+
+
+
 
 	

@@ -16,11 +16,7 @@ public class ArtistDao {
 
     public ArtistDao() {
         
-    }
-    
-   
- 
-    
+    } 
     public List<Artist> getAllArtists() {
         String sql = "SELECT * FROM Artist";
         List<Artist> artists = new ArrayList<>();
@@ -43,8 +39,6 @@ public class ArtistDao {
         }
         return artists;
     }
-    
-   
 
     public Artist getArtistById(int artistId) {
         String sql = "SELECT * FROM aachava2.Artist WHERE ArtistID = ?";
@@ -69,6 +63,18 @@ public class ArtistDao {
         return artist;
     }
 
+    public int deleteArtist(int artistId) throws SQLException{
+    	String sql = "DELETE FROM Artist WHERE ArtistID = ?";
+    	Connection connection = DBConnection.getConnection();
+    	try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, artistId);
+            return statement.executeUpdate();
+    	}
+    	catch (SQLException e) {
+            throw e;
+        }
+    }
+    
     public int updateArtist(int artistId, String name, String status, String type, String country, String primaryGenre) throws SQLException {
         String sql = "UPDATE Artist SET Name = ?, Status = ?, Country = ?, PrimaryGenre = ? WHERE ArtistID = ?";
         Connection connection = DBConnection.getConnection();
@@ -79,6 +85,9 @@ public class ArtistDao {
             statement.setString(4, primaryGenre);
             statement.setInt(5, artistId);
             return statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            throw e;
         }
     }
     

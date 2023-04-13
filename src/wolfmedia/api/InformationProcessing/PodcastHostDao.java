@@ -76,7 +76,22 @@ public class PodcastHostDao {
 	            statement.setInt(6, hostId);
 	            return statement.executeUpdate();
 	        }
+	        catch (SQLException e) {
+	            throw e;
+	        }
 	    }
+	 
+	 public int deletePodcastHost(int hostId) throws SQLException {
+	        String sql = "DELETE FROM PodcastHost WHERE HostID = ?";
+	        Connection connection = DBConnection.getConnection();
+	        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+	            statement.setInt(1, hostId);
+	            return statement.executeUpdate();
+	        }
+	        catch (SQLException e) {
+	            throw e;
+	        }
+	 }
 	 
 	    public boolean insertPodcastHost(PodcastHost host) throws SQLException {
 	        String sql = "INSERT INTO PodcastHost (HostID, FirstName, LastName, City, Email, Phone) " +
@@ -97,7 +112,7 @@ public class PodcastHostDao {
 	    }
 	    
 	    public int assignHostToPodcast(int hostId, int podcastId) throws SQLException {
-	        String query = "UPDATE aachava2.Podcast SET HostID = ? WHERE PodcastID = ?";
+	        String query = "UPDATE Podcast SET HostID = ? WHERE PodcastID = ?";
 	        Connection conn = DBConnection.getConnection();
 	        try (
 	             PreparedStatement stmt = conn.prepareStatement(query)) {
