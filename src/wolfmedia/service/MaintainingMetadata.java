@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
+import wolfmedia.api.InformationProcessing.ArtistDao;
+import wolfmedia.api.InformationProcessing.PodcastEpisodeDao;
 import wolfmedia.api.InformationProcessing.SongDao;
 import wolfmedia.model.Song;
 
@@ -29,11 +31,11 @@ public class MaintainingMetadata {
         System.out.println("5. enter Podcast Subscriber");
         System.out.println("6. update Podcast Subscriber");
         System.out.println("");
-        System.out.println("7. enter Podcast Rating Count");
-        System.out.println("8. update Podcast Rating Count");
+        System.out.println("7. enter/update Podcast Rating Count");
+        
         System.out.println("");
-        System.out.println("9. enter Podcast Episode Listener Count");
-        System.out.println("10. update Podcast Episode Listener Count");
+        System.out.println("9. enter/update Podcast Episode Listener Count");
+        
         System.out.println("");
         System.out.println("11. get Song by Artist");
         System.out.println("12. get Song by Album");
@@ -51,6 +53,7 @@ public class MaintainingMetadata {
             int option = scanner.nextInt();
             // Handle user input
             SongDao songDao = null;
+            PodcastEpisodeDao podcastEpisodeDao = null;
             switch (option) {
                 case 1:
                 	System.out.print("Enter the user id: ");
@@ -78,19 +81,74 @@ public class MaintainingMetadata {
                     System.out.println("Not Impleented");
                     break;
                 case 5:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the user id: ");
+                	int uId = scanner.nextInt();
+                	System.out.print("Enter the podcast episode id: ");
+                	int episodeId = scanner.nextInt();
+
+                	try {
+                		podcastEpisodeDao = new PodcastEpisodeDao();
+                		podcastEpisodeDao.subscribeToPodcast(uId, episodeId);
+                	    
+                		System.out.println("Podcast subscribed successfully!");
+                	} catch (SQLException e) {
+                	    System.out.println("Error simulating podcast episode playback: " + e.getMessage());
+                	}
+
                     break;
                 case 6:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the user id: ");
+                    int usrId = scanner.nextInt();
+                    System.out.print("Enter the old podcast id: ");
+                    int oId = scanner.nextInt();
+                    System.out.print("Enter the new podcast id: ");
+                    int nId = scanner.nextInt();
+                    try {
+                    	podcastEpisodeDao = new PodcastEpisodeDao();
+                		
+                        podcastEpisodeDao.updatePodcastSubscription(usrId, nId, oId);
+              
+                        break;
+                    } catch (SQLException e) {
+                        System.out.println("Error updating Supbscription: " + e.getMessage());
+                    }
                     break;
                 case 7:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the user id: ");
+                	int usId = scanner.nextInt();
+                	System.out.print("Enter the podcast id: ");
+                	int podcastId = scanner.nextInt();
+                	System.out.print("Enter the rating (1-5): ");
+                	int rating = scanner.nextInt();
+
+                	try {
+                		podcastEpisodeDao = new PodcastEpisodeDao();
+                		podcastEpisodeDao.ratePodcast(usId, podcastId, rating);
+                	    
+                	    System.out.println("Podcast rating entered/updated successfully!");
+                	} catch (SQLException e) {
+                	    System.out.println("Error entering/updating podcast rating: " + e.getMessage());
+                	}
+
                     break;
                 case 8:
                     System.out.println("Not Impleented");
                     break;
                 case 9:
-                    System.out.println("Not Impleented");
+                	System.out.print("Enter the user id: ");
+                	int usersId = scanner.nextInt();
+                	System.out.print("Enter the podcast id: ");
+                	int podId = scanner.nextInt();
+                	
+
+                	try {
+                		podcastEpisodeDao = new PodcastEpisodeDao();
+                		podcastEpisodeDao.insertPodcastEpisodeStream(podId, usersId);
+                	    
+                	    System.out.println("Podcast rating entered/updated successfully!");
+                	} catch (SQLException e) {
+                	    System.out.println("Error entering/updating podcast rating: " + e.getMessage());
+                	}
                     break;
                 case 10:
                     System.out.println("Not Impleented");
