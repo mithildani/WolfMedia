@@ -91,30 +91,23 @@ public class SongDao {
      return rowsDeleted;
      }
 
-    public boolean insertSong(int mediaid, Time duration,String title,double royaltyrate,String country,String
-            language,int albumid,int tracknumber,String releasedate) throws SQLException {
-        // Check if album exists
-//        String albumSql = "SELECT * FROM Album WHERE AlbumID = ?";
-//        Connection connection = DBConnection.getConnection();
-//        try (PreparedStatement albumStmt = connection.prepareStatement(albumSql)) {
-//            albumStmt.setInt(1, song.getAlbumId());
-//            ResultSet albumRs = albumStmt.executeQuery();
-//            if (!albumRs.next()) {
-//                // Album does not exist
-//                return false;
-//            } else {
-//                // check if album exists, if not create one
-//            }
-//        }
-
-        // Check if artist exists
-
-        // Insert song
+    public boolean insertSong(int mediaid, Time duration, String title, 
+    double royaltyrate, String country, String language, int albumid,
+    int tracknumber, String releasedate) throws SQLException {
+        String mediaSql = "INSERT INTO Media (MediaID) VALUES (?)";
         String songSql = "INSERT INTO Song " +
                 "(MediaID, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber, ReleaseDate) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
         Connection connection = DBConnection.getConnection();
-		try (PreparedStatement songStmt = connection.prepareStatement(songSql)) {
+        try (
+            PreparedStatement mediaStmt = connection.prepareStatement(mediaSql);
+            PreparedStatement songStmt = connection.prepareStatement(songSql);
+        ){
+            connection.setAutoCommit(false);
+            mediaStmt.setInt(1, mediaid);
+            mediaStmt.executeQuery();
+
             songStmt.setInt(1, mediaid);
             songStmt.setTime(2, duration);
             songStmt.setString(3, title);
@@ -124,15 +117,24 @@ public class SongDao {
             songStmt.setInt(7, albumid);
             songStmt.setInt(8, tracknumber);
             songStmt.setString(9, releasedate);
-
-            int rowsAffected = songStmt.executeUpdate();
-            return (rowsAffected == 1);
+            songStmt.executeQuery();
+            
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
         } catch (SQLException e) {
-            throw e;
+            if (connection!=null) {
+                try {
+                    System.out.println("Transaction is being rolled back");
+                    connection.rollback();
+                } catch (SQLException e2) {
+                    System.out.println("Error Rolling back: "+ e2.getMessage());
+                }
+            }
         }
+        return false;
     }
     
-
     public int assignSongToAlbum(int songMediaId, int albumId) throws SQLException {
         String sql = "UPDATE Song SET AlbumID = ? WHERE MediaID = ?";
         Connection conn = DBConnection.getConnection();
@@ -268,8 +270,6 @@ public class SongDao {
     	Connection conn = DBConnection.getConnection();
     	int monthlyListeners = 0;
     	try {
-//    		String query = "SELECT SUM(Count) AS MonthlyCount FROM Playbacks WHERE MONTH(PlayedAt) =" +month+ " AND MediaID =" + mediaId;
-//    		System.out.println(query);
     		PreparedStatement stmt = conn.prepareStatement("SELECT SUM(Count) AS ml FROM Playbacks WHERE MONTH(PlayedAt) = ? AND MediaID = ?");
     		
     		stmt.setInt(1, month);

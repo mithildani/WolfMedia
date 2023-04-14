@@ -26,9 +26,9 @@ public class Reports {
         System.out.println("2. get Monthly Album PlayCount");
         System.out.println("3. get Monthly Artist PlayCount");
         System.out.println("");
-        System.out.println("4. get Host Payment");
-        System.out.println("5. get Artist Payment");
-        System.out.println("6. get Record Label Payment");
+        System.out.println("4. get Monthly Host Payment");
+        System.out.println("5. get Monthly Artist Payment");
+        System.out.println("6. get Monthly Record Label Payment");
         System.out.println("");
         System.out.println("7. get Total Monthly Revenue");
         System.out.println("8. get Total Yearly Revenue");
@@ -100,7 +100,6 @@ public class Reports {
                 	} catch (SQLException e) {
                 	    System.out.println("Error getting monthly listeners: " + e.getMessage());
                 	}
-
                     break;
                 case 4:
                     System.out.println("Not Impleented");

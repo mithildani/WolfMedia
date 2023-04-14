@@ -114,22 +114,41 @@ public class PodcastEpisodeDao {
 	}
 	
 	public boolean insertPodcastEpisode(PodcastEpisode pe) throws SQLException {
-        String sql = "INSERT INTO PodcastEpisode (MediaID, Title, Duration, AdRate, FlatFee, PodcastID, ReleaseDate) " +
+        String mediaSql = "INSERT INTO Media (MediaID) VALUES (?)";
+		String episodeSql = "INSERT INTO PodcastEpisode (MediaID, Title, Duration, AdRate, FlatFee, PodcastID, ReleaseDate) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection connection = DBConnection.getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        	stmt.setInt(1, pe.getMediaID());
-            stmt.setString(2, pe.getTitle());
-            stmt.setTime(3, pe.getDuration());
-            stmt.setDouble(4, pe.getAdRate());
-            stmt.setDouble(5, pe.getFlatFee());
-            stmt.setInt(6, pe.getPodcastID());
-			stmt.setString(7, pe.getReleaseDate());
-            int rowsAffected = stmt.executeUpdate();
-            return (rowsAffected == 1);
+		try (
+            PreparedStatement mediaStmt = connection.prepareStatement(mediaSql);
+            PreparedStatement episodeStmt = connection.prepareStatement(episodeSql);
+        ){
+			connection.setAutoCommit(false);
+            mediaStmt.setInt(1, pe.getMediaID());
+            mediaStmt.executeQuery();
+
+        	episodeStmt.setInt(1, pe.getMediaID());
+            episodeStmt.setString(2, pe.getTitle());
+            episodeStmt.setTime(3, pe.getDuration());
+            episodeStmt.setDouble(4, pe.getAdRate());
+            episodeStmt.setDouble(5, pe.getFlatFee());
+            episodeStmt.setInt(6, pe.getPodcastID());
+			episodeStmt.setString(7, pe.getReleaseDate());
+            episodeStmt.executeQuery();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
         } catch (SQLException e) {
-            throw e;
+            if (connection!=null) {
+                try {
+                    System.out.println("Transaction is being rolled back");
+                    connection.rollback();
+                } catch (SQLException e2) {
+                    System.out.println("Error Rolling back: "+ e2.getMessage());
+                }
+            }
         }
+        return false;
     }
 
 	public int assignPodcastEpisodetoPodcast(int ppemediaid, int ppepodcastid) throws SQLException {
