@@ -41,7 +41,7 @@ public class ArtistDao {
     }
 
     public Artist getArtistById(int artistId) {
-        String sql = "SELECT * FROM aachava2.Artist WHERE ArtistID = ?";
+        String sql = "SELECT * FROM Artist WHERE ArtistID = ?";
         Artist artist= null;
         Connection connection = DBConnection.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
