@@ -1,5 +1,4 @@
 package wolfmedia.model;
-import java.sql.Date;
 import java.sql.Time;
 
 public class Song {
@@ -13,22 +12,19 @@ public class Song {
     private int albumId;
     private int trackNumber;
     
-    public Song(int songMediaId, Time duration2, String songTitle, double songRoyaltyRate, String songCountry, String songLanguage, int songAlbumID, int songTrackNumber, String songreleasedateStr) {
+    public Song() { }
 
+    public Song(int MediaId, Time duration, String title, double royaltyRate, String country, String language, int albumId, int trackNumber, String songreleasedateStr) {
+        this.mediaId = MediaId;
+        //		this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.title = title;
+        this.royaltyRate = royaltyRate;
+        this.country = country;
+        this.language = language;
+        this.albumId = albumId;
+        this.trackNumber = trackNumber;
     }
-    
-    public Song() {
-		super();
-		this.mediaId = mediaId;
-//		this.releaseDate = releaseDate;
-		this.duration = duration;
-		this.title = title;
-		this.royaltyRate = royaltyRate;
-		this.country = country;
-		this.language = language;
-		this.albumId = albumId;
-		this.trackNumber = trackNumber;
-	}
 
 	public int getMediaId() {
         return mediaId;
@@ -42,8 +38,8 @@ public class Song {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setReleaseDate(String date) {
+        this.releaseDate = date;
     }
 
     public Time getDuration() {

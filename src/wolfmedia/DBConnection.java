@@ -6,12 +6,11 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static Connection connection = null;
-  
-    static
-    {
-        String url = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/aachava2";
-        String user = "aachava2";
-        String password = "200477490";
+
+    static {
+        String url = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/mdani";
+        String user = "mdani";
+        String password = "200476448";
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
@@ -19,8 +18,7 @@ public class DBConnection {
         }
     }
 
-    public static Connection getConnection()
-    {
+    public static Connection getConnection() {
         return connection;
     }
 

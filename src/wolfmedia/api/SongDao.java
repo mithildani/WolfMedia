@@ -1,4 +1,4 @@
-package wolfmedia.api.InformationProcessing;
+package wolfmedia.api;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -110,7 +110,6 @@ public class SongDao {
         // Check if artist exists
 
         // Insert song
-    	System.out.println("KAKAKAKA" + duration);
         String songSql = "INSERT INTO Song " +
                 "(MediaID, Duration, Title, RoyaltyRate, Country, Language, AlbumID, TrackNumber, ReleaseDate) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

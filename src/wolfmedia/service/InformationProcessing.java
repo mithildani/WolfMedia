@@ -1,24 +1,21 @@
 package wolfmedia.service;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Scanner;
-import java.text.ParseException;
+
 
 import wolfmedia.DBConnection;
-import wolfmedia.api.InformationProcessing.ArtistDao;
-import wolfmedia.api.InformationProcessing.PodcastEpisodeDao;
-import wolfmedia.api.InformationProcessing.PodcastHostDao;
-import wolfmedia.api.InformationProcessing.SongDao;
+import wolfmedia.api.ArtistDao;
+import wolfmedia.api.PodcastEpisodeDao;
+import wolfmedia.api.PodcastHostDao;
+import wolfmedia.api.SongDao;
 import wolfmedia.model.Artist;
 import wolfmedia.model.PodcastHost;
 import wolfmedia.model.PodcastEpisode;
-import wolfmedia.model.Song;
 
 
 public class InformationProcessing {
@@ -79,7 +76,6 @@ public class InformationProcessing {
             switch (option) {
                 case 1:
                     // Add a new song
-                	
                     System.out.print("Enter media ID: ");
                     int songMediaId = scanner.nextInt();
                     scanner.nextLine(); // consume newline character
@@ -104,11 +100,11 @@ public class InformationProcessing {
                             duration = new Time(date.getTime());
                         } catch (Exception e) {
                             System.out.println("Invalid time format. Please try again.");
-                            return;
+                            break;
                         }
                     } else {
                         System.out.println("No input available");
-                        return;
+                        break;
                     }
 
                     System.out.print("Enter royalty rate (e.g. 12.50): ");
@@ -128,11 +124,11 @@ public class InformationProcessing {
                             songreleaseDate = dateFormat.parse(songreleasedateStr);
                         } catch (Exception e) {
                             System.out.println("Invalid Date format. Please try again.");
-                            return;
+                            break;
                         }
                     } else {
                         System.out.println("No input available");
-                        return;
+                        break;
                     }
                     
                     String sql = "INSERT INTO Media (MediaID) " + "VALUES (?)";
@@ -141,7 +137,7 @@ public class InformationProcessing {
     					stmt.setInt(1, songMediaId);
     					stmt.executeQuery();
     		        } catch (SQLException e) {
-    		            throw e;
+    		            System.out.println("Error creating MediaID: " + e.getMessage());
     		        }
                     try {
                     	songDao = new SongDao();
@@ -183,11 +179,11 @@ public class InformationProcessing {
                             updatesongduration = new Time(date.getTime());
                         } catch (Exception e) {
                             System.out.println("Invalid time format. Please try again.");
-                            return;
+                            break;
                         }
                     } else {
                         System.out.println("No input available");
-                        return;
+                        break;
                     }
                     System.out.println("Enter new Release Date (yyyy-mm-dd): ");
                 	String updatesongreleasedateStr = scanner.next();
@@ -201,11 +197,11 @@ public class InformationProcessing {
                             updatesongreleaseDate = dateFormat.parse(updatesongreleasedateStr);
                         } catch (Exception e) {
                             System.out.println("Invalid Date format. Please try again.");
-                            return;
+                            break;
                         }
                     } else {
                         System.out.println("No input available");
-                        return;
+                        break;
                     }
                     
                     try {
@@ -427,11 +423,11 @@ public class InformationProcessing {
                             peduration = new Time(date.getTime());
                         } catch (Exception e) {
                             System.out.println("Invalid time format. Please try again.");
-                            return;
+                            break;
                         }
                     } else {
                         System.out.println("No input available");
-                        return;
+                        break;
                     }
                 	
                 	System.out.println("Enter Ad Rate : ");
@@ -456,14 +452,13 @@ public class InformationProcessing {
                             pereleaseDate = dateFormat.parse(pereleasedateStr);
                         } catch (Exception e) {
                             System.out.println("Invalid Date format. Please try again.");
-                            return;
+                            break;
                         }
                     } else {
                         System.out.println("No input available");
-                        return;
+                        break;
                     }
-                	
-				String pereleasedate = null;				
+                				
 				sql = "INSERT INTO Media (MediaID) " + "VALUES (?)";
 				Connection connection1 = DBConnection.getConnection();
 				try (PreparedStatement stmt = connection1.prepareStatement(sql)) {

@@ -1,5 +1,5 @@
 public int assignPodcastEpisodeToPodcast(int episodeMediaId, int podcastId) {
-    String sql = "UPDATE aachava2.PodcastEpisode SET PodcastID = ? WHERE MediaID = ?";
+    String sql = "UPDATE PodcastEpisode SET PodcastID = ? WHERE MediaID = ?";
     Connection conn = DBConnection.getConnection();
     try (
          PreparedStatement ps = conn.prepareStatement(sql)) {
