@@ -16,7 +16,7 @@ public class PodcastEpisodeDao {
     public PodcastEpisodeDao() {}
 
     public PodcastEpisode getPodcastEpisodeById(int mediaId) {
-        String sql = "SELECT * FROM Song WHERE MediaID = ?";
+        String sql = "SELECT * FROM PodcastEpisode WHERE MediaID = ?";
         PodcastEpisode pe = null;
         Connection connection = DBConnection.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -36,6 +36,30 @@ public class PodcastEpisodeDao {
             e.printStackTrace();
         }
         return pe;
+    }
+
+	public List<PodcastEpisode> getPodcastEpisodeByPodcastId(int podcastId) {
+        String sql = "SELECT * FROM PodcastEpisode WHERE PodcastID = ?";
+        List<PodcastEpisode> podcastepisodes = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, podcastId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                PodcastEpisode pe = new PodcastEpisode();
+                pe.setMediaID(rs.getInt("MediaID"));
+                pe.setReleaseDate(rs.getString("ReleaseDate"));
+                pe.setDuration(rs.getTime("Duration"));
+                pe.setTitle(rs.getString("Title"));
+                pe.setAdRate(rs.getDouble("AdRate"));
+                pe.setFlatFee(rs.getDouble("FlatFee"));
+                pe.setPodcastID(rs.getInt("PodcastID"));
+                podcastepisodes.add(pe);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return podcastepisodes;
     }
 	
 	public List<PodcastEpisode> getAllPodcastEpisodes() {
