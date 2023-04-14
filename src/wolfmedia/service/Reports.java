@@ -1,14 +1,12 @@
 package wolfmedia.service;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import wolfmedia.api.InformationProcessing.PaymentDao;
-import wolfmedia.api.InformationProcessing.PodcastEpisodeDao;
-import wolfmedia.api.InformationProcessing.SongDao;
-import wolfmedia.model.Song;
+import wolfmedia.api.PaymentDao;
+import wolfmedia.api.PodcastEpisodeDao;
+import wolfmedia.api.SongDao;
 
 public class Reports {
     private Scanner scanner;

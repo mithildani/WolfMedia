@@ -4,9 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import wolfmedia.api.InformationProcessing.ArtistDao;
-import wolfmedia.api.InformationProcessing.PodcastEpisodeDao;
-import wolfmedia.api.InformationProcessing.SongDao;
+import wolfmedia.api.PodcastEpisodeDao;
+import wolfmedia.api.SongDao;
 import wolfmedia.model.Song;
 
 public class MaintainingMetadata {

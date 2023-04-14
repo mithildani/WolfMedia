@@ -1,4 +1,4 @@
-package wolfmedia.api.InformationProcessing;
+package wolfmedia.api;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wolfmedia.DBConnection;
-import wolfmedia.model.Artist;
 import wolfmedia.model.PodcastHost;
 
 public class PodcastHostDao {

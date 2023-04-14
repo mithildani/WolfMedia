@@ -3,7 +3,7 @@ package wolfmedia.service;
 import java.util.List;
 import java.util.Scanner;
 
-import wolfmedia.api.InformationProcessing.SongDao;
+import wolfmedia.api.SongDao;
 import wolfmedia.model.Song;
 
 public class Miscellaneous {
@@ -22,7 +22,7 @@ public class Miscellaneous {
         System.out.println("");
         System.out.println("1. get all Songs");
         System.out.println("2. get Songs by MediaID");
-        System.out.println("3. ");
+        System.out.println("3. is Royalty Paid");
 
         System.out.println("");
         System.out.println("0. Return");
@@ -60,7 +60,7 @@ public class Miscellaneous {
                     }
                     break;
                 case 3:
-                    System.out.println("Not Impleented");
+                    System.out.println("Not Implemented");
                     break;
                 case 0:
                     return;
