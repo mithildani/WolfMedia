@@ -27,59 +27,69 @@ public class WolfMediaService {
         System.out.println("");
     }
 
+    public static void closeService(Scanner scanner) {
+        scanner.close();
+        DBConnection.close();
+        System.out.println("Goodbye!");
+        System.exit(0);
+    }
+
     public static void main(String[] args) throws SQLException {
 
         // Create a scanner for user input
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Welcome to Wolf Media Service!");
-        System.out.println("");
-        System.out.println("");
+        try {
+            System.out.println("Welcome to Wolf Media Service!");
+            System.out.println("");
+            System.out.println("");
 
-        // Display the dashboard
-        while (true) {
-            printMenu();
-            // Get user input
-            int option = scanner.nextInt();
-            // Handle user input
-            switch (option) {
-                case 1:
-                    InformationProcessing ip = new InformationProcessing();
-                    ip.process();
-                    break;
-                case 2:
-                    MaintainingMetadata mm = new MaintainingMetadata();
-                    mm.process();
-                    break;
-                case 3:
-                    MaintainingPayments mp = new MaintainingPayments();
-                    mp.process();
-                    break;
-                case 4:
-                    Reports r = new Reports();
-                    r.process();
-                    break;
-                case 5:
-                    Miscellaneous m = new Miscellaneous();
-                    m.process();
-                    break;
-                case 0:
-                    // Quit
-                    scanner.close();
-                    DBConnection.close();
-                    System.out.println("Goodbye!");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Invalid option.");
-                    break;
+            // Display the dashboard
+            while (true) {
+                printMenu();
+                // Get user input
+                int option = scanner.nextInt();
+                // Handle user input
+                switch (option) {
+                    case 1:
+                        InformationProcessing ip = new InformationProcessing();
+                        ip.process();
+                        break;
+                    case 2:
+                        MaintainingMetadata mm = new MaintainingMetadata();
+                        mm.process();
+                        break;
+                    case 3:
+                        MaintainingPayments mp = new MaintainingPayments();
+                        mp.process();
+                        break;
+                    case 4:
+                        Reports r = new Reports();
+                        r.process();
+                        break;
+                    case 5:
+                        Miscellaneous m = new Miscellaneous();
+                        m.process();
+                        break;
+                    case 0:
+                        // Quit
+                        closeService(scanner);
+                        break;
+                    default:
+                        System.out.println("Invalid option.");
+                        break;
+                }
+
+                scanner.nextLine();
+                System.out.println("Press enter to continue...");
+                scanner.nextLine();
             }
 
-            scanner.nextLine();
-            System.out.println("Press enter to continue...");
-            scanner.nextLine();
+        } catch (Exception e) {
+            closeService(scanner);
         }
+    } 
 
-    }
+    
 
 }
