@@ -143,6 +143,7 @@ public class Reports {
                     break;
                 case 6:
                     System.out.print("Enter the Record Label Name: ");
+                    scanner.nextLine();
                     String labelName = scanner.nextLine();
                     try {
                         paymentDao = new PaymentDao();
