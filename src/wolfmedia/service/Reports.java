@@ -151,7 +151,7 @@ public class Reports {
                         System.out.println("LabelName\t RecordLabelPayment\t Year\t Month\t ");
                         while (rs.next()) {
                             System.out.println(
-                                    rs.getInt("LabelName") + "\t" +
+                                    rs.getString("LabelName") + "\t" +
                                             rs.getFloat("RecordLabelPayment") + "\t" +
                                             rs.getInt("Year") + "\t" +
                                             rs.getInt("Month"));
