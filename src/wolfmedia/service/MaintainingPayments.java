@@ -1,6 +1,9 @@
 package wolfmedia.service;
 
+import java.sql.SQLException;
 import java.util.Scanner;
+
+import wolfmedia.api.PaymentDao;
 
 public class MaintainingPayments {
     private Scanner scanner;
@@ -31,16 +34,70 @@ public class MaintainingPayments {
 
             // Get user input
             int option = scanner.nextInt();
+            int year;
+            int month;
+            boolean createdpayment;
+            PaymentDao paymentdao;
             // Handle user input
             switch (option) {
                 case 1:
-                    System.out.println("Not Impleented");
+                    System.out.println("Enter Media Id: ");
+                    int media_id = scanner.nextInt();
+                    System.out.println("Enter Year: ");
+                    year = scanner.nextInt();
+                    System.out.println("Enter Month: ");
+                    month = scanner.nextInt();
+                    try {
+                        paymentdao = new PaymentDao();
+                        createdpayment = paymentdao.createSongPayment(media_id, year, month);
+                        if (createdpayment) {
+                            System.out.println("Payment created");
+                        } else {
+                            System.out.println("Payment creation failed");
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Payment creation failed: " + e.getMessage());
+                    }
+
                     break;
                 case 2:
-                    System.out.println("Not Impleented");
+                    System.out.println("Enter Host Id: ");
+                    int host_id = scanner.nextInt();
+                    System.out.println("Enter Year: ");
+                    year = scanner.nextInt();
+                    System.out.println("Enter Month: ");
+                    month = scanner.nextInt();
+                    try {
+                        paymentdao = new PaymentDao();
+                        createdpayment = paymentdao.createPodcastPayment(host_id, year, month);
+                        if (createdpayment) {
+                            System.out.println("Payment created");
+                        } else {
+                            System.out.println("Payment creation failed");
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Payment creation failed: " + e.getMessage());
+                    }
+
                     break;
                 case 3:
-                    System.out.println("Not Impleented");
+                    System.out.println("Enter User Id: ");
+                    int user_id = scanner.nextInt();
+                    System.out.println("Enter Year: ");
+                    year = scanner.nextInt();
+                    System.out.println("Enter Month: ");
+                    month = scanner.nextInt();
+                    try {
+                        paymentdao = new PaymentDao();
+                        createdpayment = paymentdao.createSubscriberPayment(user_id, year, month);
+                        if (createdpayment) {
+                            System.out.println("Payment created");
+                        } else {
+                            System.out.println("Payment creation failed");
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Payment creation failed: " + e.getMessage());
+                    }
                     break;
                 case 0:
                     return;

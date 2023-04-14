@@ -16,6 +16,7 @@ public class ArtistDao {
     public ArtistDao() {
         
     } 
+
     public List<Artist> getAllArtists() {
         String sql = "SELECT * FROM Artist";
         List<Artist> artists = new ArrayList<>();

@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import wolfmedia.api.PodcastEpisodeDao;
 import wolfmedia.api.SongDao;
+import wolfmedia.model.PodcastEpisode;
 import wolfmedia.model.Song;
 
 public class MaintainingMetadata {
@@ -24,21 +25,18 @@ public class MaintainingMetadata {
         System.out.println("");
         System.out.println("1. enter/update Song PlayCount");
         System.out.println("");
-        System.out.println("2. enter Monthly Artist Listener Count");
-        System.out.println("4. update Monthly Artist Listener Count");
+        System.out.println("2. enter/update Monthly Artist Listener Count");
         System.out.println("");
-        System.out.println("5. enter Podcast Subscriber");
-        System.out.println("6. update Podcast Subscriber");
+        System.out.println("3. enter Podcast Subscriber");
+        System.out.println("4. update Podcast Subscriber");
         System.out.println("");
-        System.out.println("7. enter/update Podcast Rating Count");
-        
+        System.out.println("5. enter/update Podcast Rating Count");
         System.out.println("");
-        System.out.println("9. enter/update Podcast Episode Listener Count");
-        
+        System.out.println("6. enter/update Podcast Episode Listener Count");
         System.out.println("");
-        System.out.println("11. get Song by Artist");
-        System.out.println("12. get Song by Album");
-        System.out.println("13. get Podcast Episode");
+        System.out.println("7. get Song by Artist");
+        System.out.println("8. get Song by Album");
+        System.out.println("9. get Podcast Episode by Podcast");
         System.out.println("");
         System.out.println("0. Return");
     }
@@ -67,19 +65,11 @@ public class MaintainingMetadata {
                     } catch (SQLException e) {
                         System.out.println("Error simulating song playback: " + e.getMessage());
                     }
-                    
-                    
                     break;
                 case 2:
-                    System.out.println("Not Impleented");
+                    System.out.println("User Listens to Song and Every song is created by the artist. enterSongPlayCount automatically records ArtistListenerCount. Thus our schema does not need to enter artist Listener count separately.");
                     break;
                 case 3:
-                    System.out.println("Not Impleented");
-                    break;
-                case 4:
-                    System.out.println("Not Impleented");
-                    break;
-                case 5:
                 	System.out.print("Enter the user id: ");
                 	int uId = scanner.nextInt();
                 	System.out.print("Enter the podcast episode id: ");
@@ -95,7 +85,7 @@ public class MaintainingMetadata {
                 	}
 
                     break;
-                case 6:
+                case 4:
                 	System.out.print("Enter the user id: ");
                     int usrId = scanner.nextInt();
                     System.out.print("Enter the old podcast id: ");
@@ -109,10 +99,10 @@ public class MaintainingMetadata {
               
                         break;
                     } catch (SQLException e) {
-                        System.out.println("Error updating Supbscription: " + e.getMessage());
+                        System.out.println("Error updating Subscription: " + e.getMessage());
                     }
                     break;
-                case 7:
+                case 5:
                 	System.out.print("Enter the user id: ");
                 	int usId = scanner.nextInt();
                 	System.out.print("Enter the podcast id: ");
@@ -130,10 +120,7 @@ public class MaintainingMetadata {
                 	}
 
                     break;
-                case 8:
-                    System.out.println("Not Impleented");
-                    break;
-                case 9:
+                case 6:
                 	System.out.print("Enter the user id: ");
                 	int usersId = scanner.nextInt();
                 	System.out.print("Enter the podcast id: ");
@@ -143,21 +130,17 @@ public class MaintainingMetadata {
                 	try {
                 		podcastEpisodeDao = new PodcastEpisodeDao();
                 		podcastEpisodeDao.insertPodcastEpisodeStream(podId, usersId);
-                	    
-                	    System.out.println("Podcast rating entered/updated successfully!");
+                	    System.out.println("Podcast Episode Listener Count entered/updated successfully!");
                 	} catch (SQLException e) {
-                	    System.out.println("Error entering/updating podcast rating: " + e.getMessage());
+                	    System.out.println("Error entering/updating podcast episode listener count: " + e.getMessage());
                 	}
                     break;
-                case 10:
-                    System.out.println("Not Impleented");
-                    break;
-                case 11:
+                case 7:
                 	System.out.print("Enter the artist id: ");
                 	int aID= scanner.nextInt();
 
                 	try {
-                	     songDao = new SongDao();
+                	    songDao = new SongDao();
                 	    List<Song> songs = songDao.getSongsByArtist(aID);
 
                 	    if (songs.isEmpty()) {
@@ -171,14 +154,13 @@ public class MaintainingMetadata {
                 	} catch (SQLException e) {
                 	    System.out.println("Error retrieving songs by artist: " + e.getMessage());
                 	}
-
                     break;
-                case 12:
+                case 8:
                 	System.out.print("Enter the album id: ");
                 	int albID= scanner.nextInt();
 
                 	try {
-                	     songDao = new SongDao();
+                	    songDao = new SongDao();
                 	    List<Song> songs = songDao.getSongsByAlbum(albID);
 
                 	    if (songs.isEmpty()) {
@@ -192,10 +174,26 @@ public class MaintainingMetadata {
                 	} catch (SQLException e) {
                 	    System.out.println("Error retrieving songs by artist: " + e.getMessage());
                 	}
-
                     break;
-                case 13:
-                    System.out.println("Not Impleented");
+                case 9:
+                    System.out.print("Enter the Podcast id: ");
+                    int podcastID= scanner.nextInt();
+
+                    try {
+                        podcastEpisodeDao = new PodcastEpisodeDao();
+                        List<PodcastEpisode> podcastEpisodes = podcastEpisodeDao.getPodcastEpisodeByPodcastId(podcastID);
+
+                        if (podcastEpisodes.isEmpty()) {
+                            System.out.println("No podcast episode found for podcast " + podcastID);
+                        } else {
+                            System.out.println("Podcast Episodes for Podcast " + podcastID + ":");
+                            for (PodcastEpisode podcastEpisode : podcastEpisodes) {
+                                System.out.println(podcastEpisode.getTitle());
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error retrieving episodes by podcast: " + e.getMessage());
+                    }
                     break;
                 case 0:
                     return;

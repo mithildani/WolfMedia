@@ -16,7 +16,7 @@ public class PodcastEpisodeDao {
     public PodcastEpisodeDao() {}
 
     public PodcastEpisode getPodcastEpisodeById(int mediaId) {
-        String sql = "SELECT * FROM Song WHERE MediaID = ?";
+        String sql = "SELECT * FROM PodcastEpisode WHERE MediaID = ?";
         PodcastEpisode pe = null;
         Connection connection = DBConnection.getConnection();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -36,6 +36,30 @@ public class PodcastEpisodeDao {
             e.printStackTrace();
         }
         return pe;
+    }
+
+	public List<PodcastEpisode> getPodcastEpisodeByPodcastId(int podcastId) {
+        String sql = "SELECT * FROM PodcastEpisode WHERE PodcastID = ?";
+        List<PodcastEpisode> podcastepisodes = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, podcastId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                PodcastEpisode pe = new PodcastEpisode();
+                pe.setMediaID(rs.getInt("MediaID"));
+                pe.setReleaseDate(rs.getString("ReleaseDate"));
+                pe.setDuration(rs.getTime("Duration"));
+                pe.setTitle(rs.getString("Title"));
+                pe.setAdRate(rs.getDouble("AdRate"));
+                pe.setFlatFee(rs.getDouble("FlatFee"));
+                pe.setPodcastID(rs.getInt("PodcastID"));
+                podcastepisodes.add(pe);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return podcastepisodes;
     }
 	
 	public List<PodcastEpisode> getAllPodcastEpisodes() {
@@ -90,22 +114,41 @@ public class PodcastEpisodeDao {
 	}
 	
 	public boolean insertPodcastEpisode(PodcastEpisode pe) throws SQLException {
-        String sql = "INSERT INTO PodcastEpisode (MediaID, Title, Duration, AdRate, FlatFee, PodcastID, ReleaseDate) " +
+        String mediaSql = "INSERT INTO Media (MediaID) VALUES (?)";
+		String episodeSql = "INSERT INTO PodcastEpisode (MediaID, Title, Duration, AdRate, FlatFee, PodcastID, ReleaseDate) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection connection = DBConnection.getConnection();
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-        	stmt.setInt(1, pe.getMediaID());
-            stmt.setString(2, pe.getTitle());
-            stmt.setTime(3, pe.getDuration());
-            stmt.setDouble(4, pe.getAdRate());
-            stmt.setDouble(5, pe.getFlatFee());
-            stmt.setInt(6, pe.getPodcastID());
-			stmt.setString(7, pe.getReleaseDate());
-            int rowsAffected = stmt.executeUpdate();
-            return (rowsAffected == 1);
+		try (
+            PreparedStatement mediaStmt = connection.prepareStatement(mediaSql);
+            PreparedStatement episodeStmt = connection.prepareStatement(episodeSql);
+        ){
+			connection.setAutoCommit(false);
+            mediaStmt.setInt(1, pe.getMediaID());
+            mediaStmt.executeQuery();
+
+        	episodeStmt.setInt(1, pe.getMediaID());
+            episodeStmt.setString(2, pe.getTitle());
+            episodeStmt.setTime(3, pe.getDuration());
+            episodeStmt.setDouble(4, pe.getAdRate());
+            episodeStmt.setDouble(5, pe.getFlatFee());
+            episodeStmt.setInt(6, pe.getPodcastID());
+			episodeStmt.setString(7, pe.getReleaseDate());
+            episodeStmt.executeQuery();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+            return true;
         } catch (SQLException e) {
-            throw e;
+            if (connection!=null) {
+                try {
+                    System.out.println("Transaction is being rolled back");
+                    connection.rollback();
+                } catch (SQLException e2) {
+                    System.out.println("Error Rolling back: "+ e2.getMessage());
+                }
+            }
         }
+        return false;
     }
 
 	public int assignPodcastEpisodetoPodcast(int ppemediaid, int ppepodcastid) throws SQLException {
