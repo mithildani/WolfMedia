@@ -37,7 +37,7 @@ song title, artist(s), duration, genre(s), album, play count, release date, rele
 This repo contains a service layer written in java which connects to a mariadb database to perform all posible operations based on the given requirement.
 
 ### ER Diagram
-![ER Diagram](./WolfMedia_ER.png)
+![ER Diagram](WolfMedia_ER.jpg)
 
 ### Design Assumptions
 * Record Labels have unique registered names
